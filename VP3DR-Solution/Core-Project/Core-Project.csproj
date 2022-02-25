@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Managers\Managers.csproj" />
+    <ProjectReference Include="..\Vector-Library\Vector-Library.csproj" />
+  </ItemGroup>
 </Project>
