@@ -13,13 +13,16 @@ namespace Core_Project
 		private int bufferHandle, programHandle, arrayHandle;
 		private string vertexShader, pixelShader;
 		private Action exitCallBack;
-		public Drawer(int width, int height, Action onExit) : base(GameWindowSettings.Default, NativeWindowSettings.Default)
+		private Logger log;
+		public Drawer(int width, int height, Action onExit, Logger log) : base(GameWindowSettings.Default, NativeWindowSettings.Default)
 		{
+			this.log = log;
 			CenterWindow(new Vector2i(width, height));
 			exitCallBack = onExit;
 		}
 		protected override void OnResize(ResizeEventArgs e)
 		{
+			log.Log($"Window resized to {e.Width}, {e.Height}");
 			GL.Viewport(0, 0, e.Width, e.Height);
 			base.OnResize(e);
 		}
@@ -71,12 +74,14 @@ namespace Core_Project
 			GL.DeleteShader(pixelHandle);
 
 			base.OnLoad();
+			log.Log($"Drawer fully loaded...");
 		}
 		private void LoadShaders()
 		{
 			string folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 			vertexShader = FileManager.GetText(string.Concat(folder, @"\Shaders\VertexShader.vert"));
-			pixelShader = FileManager.GetText(string.Concat(folder, @"\Shaders\VertexShader.vert"));
+			pixelShader = FileManager.GetText(string.Concat(folder, @"\Shaders\PixelShader.frag"));
+			log.Log($"Shaders loaded from file...");
 		}
 		protected override void OnUpdateFrame(FrameEventArgs args)
 		{
@@ -102,9 +107,11 @@ namespace Core_Project
 			GL.DeleteProgram(programHandle);
 
 			base.OnUnload();
+			log.Log($"Drawer fully unloaded...");
 		}
 		protected override void OnClosing(CancelEventArgs e)
 		{
+			log.Log($"Closing drawer...");
 			exitCallBack();
 			base.OnClosing(e);
 		}

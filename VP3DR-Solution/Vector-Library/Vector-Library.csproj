@@ -11,6 +11,9 @@
 		<PackageReference Include="OpenTK" Version="4.7.1" />
 	</ItemGroup>
 	<ItemGroup>
+	  <None Update="Shaders\PixelShader.frag">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Shaders\VertexShader.vert">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>

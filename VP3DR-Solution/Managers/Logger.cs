@@ -11,6 +11,7 @@ namespace Managers
 			warn,
 			error
 		}
+		public bool initialized = false;
 		// private
 		private string fileName = string.Empty;
 		private string? directory = string.Empty;
@@ -26,6 +27,7 @@ namespace Managers
 			{
 				Log($"Attempting to create directory {directory}");
 				Directory.CreateDirectory(directory);
+				initialized = true;
 			}
 			catch (Exception e)
 			{
@@ -49,8 +51,11 @@ namespace Managers
 			Console.Write(addition);
 			Console.WriteLine(message);
 			// append to log file
-			log.Append(addition);
-			log.AppendLine(message);
+			if (initialized)
+			{
+				log.Append(addition);
+				log.AppendLine(message);
+			}
 		}
 		public bool Write()
 		{

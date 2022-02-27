@@ -63,7 +63,7 @@ namespace Core_Project
 		}
 		private void InitializeDrawWindow()
 		{
-			drawer = new Drawer(1280, 720, Exit);
+			drawer = new Drawer(1280, 720, Exit, log);
 		}
 		public void Run()
 		{
