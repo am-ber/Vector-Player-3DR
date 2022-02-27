@@ -1,12 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Managers
 {
-	internal class FileManager
+	public static class FileManager
 	{
+		public static string GetText(string filePath)
+		{
+			if (!File.Exists(filePath))
+			{
+				return string.Empty;
+			}
+			string sender = string.Empty;
+			try
+			{
+				sender = File.ReadAllText(filePath);
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine($"Can't read file: {e.Message}\n{e.StackTrace}");
+			}
+			return sender;
+		}
 	}
 }

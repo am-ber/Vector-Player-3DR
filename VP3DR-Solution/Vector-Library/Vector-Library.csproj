@@ -7,6 +7,12 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="CSCore" Version="1.2.1.2" />
 		<PackageReference Include="OpenTK" Version="4.7.1" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Shaders\VertexShader.vert">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 </Project>
