@@ -1,41 +1,39 @@
-﻿using OpenTK.Windowing.Desktop;
+﻿using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenTK.Windowing.Common;
+using OpenTK.Mathematics;
 using System.ComponentModel;
 
 namespace Core_Project
 {
 	internal class Drawer : GameWindow
 	{
-		public Drawer(int width, int height, string title) : base(GameWindowSettings.Default, NativeWindowSettings.Default)
+		private Action exitCallBack;
+		public Drawer(int width, int height, Action onExit) : base(GameWindowSettings.Default, NativeWindowSettings.Default)
 		{
-			
-			Load += load;
-			UpdateFrame += update;
-			RenderFrame += renderFrame;
-			Closing += close;
+			CenterWindow(new Vector2i(width, height));
+			exitCallBack = onExit;
 		}
-		private void load()
+		protected override void OnResize(ResizeEventArgs e)
 		{
-
+			base.OnResize(e);
 		}
-		private void update(FrameEventArgs args)
+		protected override void OnUpdateFrame(FrameEventArgs args)
 		{
-
+			base.OnUpdateFrame(args);
 		}
-		private void renderFrame(FrameEventArgs args)
+		protected override void OnRenderFrame(FrameEventArgs args)
 		{
+			GL.ClearColor(Color4.Black);
+			GL.Clear(ClearBufferMask.ColorBufferBit);
 
+			this.Context.SwapBuffers();
+			base.OnRenderFrame(args);
 		}
-		private void close(CancelEventArgs args)
+		protected override void OnClosing(CancelEventArgs e)
 		{
-
+			exitCallBack();
+			base.OnClosing(e);
 		}
 	}
 }
