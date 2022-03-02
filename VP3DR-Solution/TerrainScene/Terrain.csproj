@@ -1,15 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Core_Project</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Managers\Managers.csproj" />
-    <ProjectReference Include="..\TerrainScene\Terrain.csproj" />
     <ProjectReference Include="..\Vector-Library\Vector-Library.csproj" />
   </ItemGroup>
+
 </Project>

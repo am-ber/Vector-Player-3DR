@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vector-Library", "Vector-Li
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vector-Player-3DR", "Vector-Player-3DR\Vector-Player-3DR.csproj", "{028BFAA2-1C43-4CB9-8A4C-FC3CA8F8908B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terrain", "TerrainScene\Terrain.csproj", "{95EC4F1A-7596-46BE-997E-22B2E4755F66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,14 @@ Global
 		{028BFAA2-1C43-4CB9-8A4C-FC3CA8F8908B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{028BFAA2-1C43-4CB9-8A4C-FC3CA8F8908B}.Release|ARM64.ActiveCfg = Release|ARM64
 		{028BFAA2-1C43-4CB9-8A4C-FC3CA8F8908B}.Release|ARM64.Build.0 = Release|ARM64
+		{95EC4F1A-7596-46BE-997E-22B2E4755F66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95EC4F1A-7596-46BE-997E-22B2E4755F66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95EC4F1A-7596-46BE-997E-22B2E4755F66}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{95EC4F1A-7596-46BE-997E-22B2E4755F66}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{95EC4F1A-7596-46BE-997E-22B2E4755F66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95EC4F1A-7596-46BE-997E-22B2E4755F66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95EC4F1A-7596-46BE-997E-22B2E4755F66}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{95EC4F1A-7596-46BE-997E-22B2E4755F66}.Release|ARM64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
