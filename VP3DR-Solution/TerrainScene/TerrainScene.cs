@@ -1,24 +1,40 @@
-﻿using Vector_Library;
+﻿using Core_Project;
+using Vector_Library;
+using static Vector_Library.IScene;
 
 namespace Terrain
 {
 	public class TerrainScene : IScene
 	{
-		public void Dispose()
+		private SceneInfo info;
+		SceneInfo IScene.Info
 		{
-			throw new NotImplementedException();
+			get => info;
+			set => info = value;
 		}
-
-		public void Draw()
+		public TerrainScene()
 		{
-			// code to make pretty terrain
-			throw new NotImplementedException();
+			info = new SceneInfo()
+			{
+				Name = "Terrain Generator",
+				Description = "Fly over an infinite generation of terrain with the original vector landscape that started it all."
+			};
 		}
+		public void Load()
+		{
 
+		}
 		public void Update()
 		{
 
-			throw new NotImplementedException();
+		}
+		public void Draw(IDrawer d)
+		{
+			
+		}
+		public void Dispose()
+		{
+
 		}
 	}
 }

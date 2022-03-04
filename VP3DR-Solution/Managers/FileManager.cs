@@ -22,5 +22,18 @@ namespace Managers
 			}
 			return sender;
 		}
+		public static bool ForceDir(string directory)
+		{
+			try
+			{
+				Directory.CreateDirectory(directory);
+				return true;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				return false;
+			}
+		}
 	}
 }

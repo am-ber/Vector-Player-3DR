@@ -23,16 +23,16 @@ namespace Managers
 			this.fileName = fileName;
 			directory = string.Concat(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"\logs\");
 			// check if the logging folder is there
-			try
+			
+			if (FileManager.ForceDir(directory))
 			{
-				Log($"Attempting to create directory {directory}");
-				Directory.CreateDirectory(directory);
-				initialized = true;
+				Log($"Created directory: {directory}");
 			}
-			catch (Exception e)
+			else
 			{
-				Log($"Couldn't make directory: {e.Message}");
+				Log($"Couldn't make directory: {directory}");
 			}
+			initialized = true;
 		}
 		public void Log(string message, Level level = Level.info)
 		{

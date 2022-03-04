@@ -5,11 +5,10 @@
     <RootNamespace>Core_Project</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <BaseOutputPath>core\</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Managers\Managers.csproj" />
-    <ProjectReference Include="..\TerrainScene\Terrain.csproj" />
-    <ProjectReference Include="..\Vector-Library\Vector-Library.csproj" />
   </ItemGroup>
 </Project>
