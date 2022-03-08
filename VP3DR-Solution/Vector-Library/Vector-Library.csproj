@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<RootNamespace>Vector_Library</RootNamespace>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="CSCore" Version="1.2.1.2" />
-		<PackageReference Include="OpenTK" Version="4.7.1" />
+		<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Update="Shaders\PixelShader.frag">

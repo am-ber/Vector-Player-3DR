@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel;
 using Managers;
 using System.Reflection;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Core_Project
 {
-	public class Drawer : IDrawer
+	public class Drawer : Game, IDrawer
 	{
 		private Action exitCallBack;
 		private Logger log;
@@ -15,10 +18,6 @@ namespace Core_Project
 			this.log = log;
 			exitCallBack = onExit;
 			sceneManager = new SceneManager(log);
-		}
-		public void Run()
-		{
-
 		}
 	}
 }
