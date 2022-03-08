@@ -63,11 +63,25 @@ namespace Core_Project
 		}
 		private void InitializeDrawWindow()
 		{
-			drawer = new Drawer(1280, 720, Exit, log);
+			try
+			{
+				drawer = new Drawer(1280, 720, Exit, log);
+			}
+			catch(Exception e)
+			{
+				Log($"Couldn't make drawer: {e.Message}\n{e.StackTrace}");
+			}
 		}
 		public void Run()
 		{
-			drawer.Run();
+			try
+			{
+				drawer.Run();
+			}
+			catch(Exception e)
+			{
+				Log($"Error running drawer: {e.Message}\n{e.StackTrace}");
+			}
 		}
 		public void Exit()
 		{

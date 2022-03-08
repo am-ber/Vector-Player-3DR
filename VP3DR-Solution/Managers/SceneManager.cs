@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core_Project;
+using System;
 using System.Reflection;
 using Vector_Library;
 
@@ -6,12 +7,14 @@ namespace Managers
 {
 	public class SceneManager
 	{
-		private IScene fallBack;
 		public IScene activeScene;
+		private IDrawer drawer;
+		private IScene fallBack;
 		private List<IScene> loadedScenes;
 		private Logger log;
-		public SceneManager(Logger log)
+		public SceneManager(IDrawer drawer, Logger log)
 		{
+			this.drawer = drawer;
 			this.log = log;
 			loadedScenes = new List<IScene>();
 			// set fallback scene
@@ -81,13 +84,13 @@ namespace Managers
 					activeScene.Dispose();
 				// bring in the new one from the index provided
 				activeScene = loadedScenes[index];
-				activeScene.Load();
+				activeScene.Load(drawer);
 				return true;
 			}
 			catch (Exception e)
 			{
 				activeScene = fallBack;
-				activeScene.Load();
+				activeScene.Load(drawer);
 				Log($"Couldn't load scene at {index} index.\n{e.Message}\n{e.StackTrace}", Logger.Level.error);
 				return false;
 			}

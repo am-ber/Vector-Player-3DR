@@ -27,7 +27,7 @@ namespace Vector_Library
 		/// <summary>
 		/// Used as an initializer.
 		/// </summary>
-		public void Load();
+		public void Load(IDrawer d);
 		/// <summary>
 		/// Runs in a loop before the draw method.
 		/// </summary>
@@ -35,6 +35,6 @@ namespace Vector_Library
 		/// <summary>
 		/// Runs in a loop to draw onto the screen.
 		/// </summary>
-		public void Draw(IDrawer D);
+		public void Draw(IDrawer d);
 	}
 }

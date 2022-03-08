@@ -20,7 +20,7 @@ namespace Terrain
 				Description = "Fly over an infinite generation of terrain with the original vector landscape that started it all."
 			};
 		}
-		public void Load()
+		public void Load(IDrawer d)
 		{
 
 		}
