@@ -15,6 +15,7 @@ namespace Core_Project
 		private SceneManager sceneManager;
 		private InputManager im;
 		private GraphicsDeviceManager graphics;
+		private SpriteBatch spriteBatch;
 		// camera variables
 		private float fov = MathHelper.ToRadians(70f);
 		private Vector3 camTarget, camPosition;
@@ -55,6 +56,11 @@ namespace Core_Project
 			basicEffect.LightingEnabled = false;
 		}
 		#endregion
+		protected override void LoadContent()
+		{
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+			base.LoadContent();
+		}
 		protected override void Update(GameTime gameTime)
 		{
 			im.CheckInput();
