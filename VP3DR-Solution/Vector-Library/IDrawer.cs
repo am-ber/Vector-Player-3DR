@@ -18,6 +18,6 @@ namespace Core_Project
 		public void MoveCamera(float x, float y, float z);
 		public void MoveCamera(Vector3 pos);
 		public void UpdateViewMatrix();
-		protected void Log(string message, Level level);
+		protected void Log(string message, Level level = Level.info);
 	}
 }

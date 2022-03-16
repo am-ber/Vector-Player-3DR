@@ -27,10 +27,10 @@ namespace Vector_Library
 		}
 		public void Load(IDrawer d)
 		{
-			shapes.Add(new Shape(d.GetGraphicsDevice(),
+			shapes.Add(new Shape(d.GetGraphicsDevice(), PrimitiveType.TriangleList,
 				new VertexPositionColor(new Vector3(0, 20, 0), Color.Red), 
 				new VertexPositionColor(new Vector3(-20, -20, 0), Color.Green),
-				new VertexPositionColor(new Vector3(20, 20, 0), Color.Blue)
+				new VertexPositionColor(new Vector3(20, -20, 0), Color.Blue)
 				));
 		}
 		public void Update()
@@ -42,7 +42,7 @@ namespace Vector_Library
 			d.CameraLookAt(0, 0, 0);
 			d.MoveCamera(0, 20, -100);
 			// draw all shapes
-			foreach(Shape s in shapes)
+			foreach (Shape s in shapes)
 			{
 				s.Draw();
 			}

@@ -3,7 +3,7 @@ using Managers;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using Microsoft.Xna.Framework.Input;
 
 namespace Core_Project
 {
@@ -25,8 +25,6 @@ namespace Core_Project
 		{
 			this.log = log;
 			exitCallBack = onExit;
-			sceneManager = new SceneManager(this, log);
-			im = new InputManager(this, Dispose);
 
 			graphics = new GraphicsDeviceManager(this);
 			graphics.PreferMultiSampling = true;
@@ -39,6 +37,9 @@ namespace Core_Project
 			InitializeCamera();
 			InitializeShaders();
 			UpdateViewMatrix();
+
+			graphics.GraphicsDevice.Clear(Color.DarkGray);
+			log.Log("Drawer Initialized...");
 		}
 		private void InitializeCamera()
 		{
@@ -58,47 +59,57 @@ namespace Core_Project
 		#endregion
 		protected override void LoadContent()
 		{
-			spriteBatch = new SpriteBatch(GraphicsDevice);
 			base.LoadContent();
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+			sceneManager = new SceneManager(this, log);
+			im = new InputManager(this, Exit, OnKey);
+			log.Log("Drawer content Loaded...");
 		}
 		protected override void Update(GameTime gameTime)
 		{
+			base.Update(gameTime);
 			im.CheckInput();
 			UpdateViewMatrix();
-			base.Update(gameTime);
 		}
 		protected override void Draw(GameTime gameTime)
 		{
+			base.Draw(gameTime);
 			// draw effect
 			basicEffect.Projection = projectionMatrix;
 			basicEffect.View = viewMatrix;
 			basicEffect.World = worldMatrix;
-			// draw scene and color
-			graphics.GraphicsDevice.Clear(Color.DarkGray);
-			sceneManager.activeScene.Draw(this);
-			// optimization
-			RasterizerState rasterizerState = new RasterizerState();
-			rasterizerState.CullMode = CullMode.None;
-			GraphicsDevice.RasterizerState = rasterizerState;
-			// 
-			foreach(EffectPass pass in basicEffect.CurrentTechnique.Passes)
+
+            // optimization
+            RasterizerState rasterizerState = new RasterizerState();
+            rasterizerState.CullMode = CullMode.None;
+            GraphicsDevice.RasterizerState = rasterizerState;
+
+            // draw scene and color
+            foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
 			{
 				pass.Apply();
-				GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, 3);
 			}
-			base.Draw(gameTime);
+			sceneManager.activeScene.Draw(this);
 		}
-		public void Dispose()
-		{
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+        }
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            base.OnExiting(sender, args);
+			log.Log("");
 			exitCallBack();
-			Exit();
 		}
+        protected void OnKey(Keys key)
+        {
+			log.Log($"Key: {Enum.GetName(key)}");
+        }
 		#region Interface Accessibles
 		void IDrawer.Log(string message, IDrawer.Level level)
 		{
 			log.Log(message, (Logger.Level)((int) level));
 		}
-
 		public void CameraLookAt(float x, float y, float z)
 		{
 			camTarget = new Vector3(x, y, z);
