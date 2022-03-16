@@ -7,8 +7,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Core_Project
 {
-	public class Drawer : Game, IDrawer
+	public class MonoDrawer : Game, IDrawer
 	{
+		private bool fullscreen = false;
+		private (int, int) defaultWindowSize;
 		// objects
 		private Action exitCallBack;
 		private Logger log;
@@ -21,13 +23,16 @@ namespace Core_Project
 		private Vector3 camTarget, camPosition;
 		private Matrix projectionMatrix, viewMatrix, worldMatrix;
 		private BasicEffect basicEffect;
-		public Drawer(int width, int height, Action onExit, Logger log) 
+		public MonoDrawer(int width, int height, Action onExit, Logger log) 
 		{
 			this.log = log;
 			exitCallBack = onExit;
 
+			defaultWindowSize = (width, height);
 			graphics = new GraphicsDeviceManager(this);
 			graphics.PreferMultiSampling = true;
+			graphics.PreferredBackBufferWidth = width;
+			graphics.PreferredBackBufferHeight = height;
 			Content.RootDirectory = "Content";
 		}
 		#region Initializers
@@ -133,6 +138,32 @@ namespace Core_Project
 		public GraphicsDevice GetGraphicsDevice()
 		{
 			return GraphicsDevice;
+		}
+		public GraphicsDeviceManager GetGraphicsDeviceManager()
+        {
+			return graphics;
+        }
+		public SpriteBatch GetSpriteBatch()
+		{
+			return spriteBatch;
+		}
+		public void ToggleFullscreen()
+        {
+			if (fullscreen)
+			{
+				graphics.PreferredBackBufferWidth = defaultWindowSize.Item1;
+				graphics.PreferredBackBufferHeight = defaultWindowSize.Item2;
+				graphics.IsFullScreen = false;
+				fullscreen = false;
+			}
+			else
+			{
+				graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+				graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+				graphics.IsFullScreen = true;
+				fullscreen = true;
+			}
+			graphics.ApplyChanges();
 		}
 		public void UpdateViewMatrix()
 		{

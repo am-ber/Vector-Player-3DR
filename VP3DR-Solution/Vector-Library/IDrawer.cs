@@ -12,12 +12,15 @@ namespace Core_Project
 			error
 		}
 		public GraphicsDevice GetGraphicsDevice();
+		public GraphicsDeviceManager GetGraphicsDeviceManager();
+		public SpriteBatch GetSpriteBatch();
 		public void CameraLookAt(float x, float y, float z);
 		public void CameraLookAt(Vector3 pos);
 		public Vector3 CameraPos();
 		public void MoveCamera(float x, float y, float z);
 		public void MoveCamera(Vector3 pos);
 		public void UpdateViewMatrix();
+		public void ToggleFullscreen();
 		protected void Log(string message, Level level = Level.info);
 	}
 }

@@ -12,7 +12,7 @@ namespace Core_Project
 		public Logger log;
 		public bool logActive = false;
 		// private
-		private Drawer drawer;
+		private MonoDrawer drawer;
 		private System.Timers.Timer timer;
 		private Stopwatch sw = new Stopwatch();
 		// methods
@@ -65,7 +65,7 @@ namespace Core_Project
 		{
 			try
 			{
-				drawer = new Drawer(1280, 720, Exit, log);
+				drawer = new MonoDrawer(1280, 720, Exit, log);
 			}
 			catch(Exception e)
 			{

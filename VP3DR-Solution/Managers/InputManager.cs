@@ -30,18 +30,23 @@ namespace Managers
 			if (Keyboard.GetState().GetPressedKeyCount() > 0)
 			{
 				HandleMultipleKeys(Keyboard.GetState().GetPressedKeys());
-			}
-			if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-			{
-				exitCallBack();
-			}
-			if (Keyboard.GetState().IsKeyDown(Keys.Left))
-			{
-				drawer.MoveCamera(Vector3.Transform(drawer.CameraPos(), rotateL));
-			}
-			if (Keyboard.GetState().IsKeyDown(Keys.Right))
-			{
-				drawer.MoveCamera(Vector3.Transform(drawer.CameraPos(), rotateR));
+				if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+				{
+					exitCallBack();
+				}
+				if (Keyboard.GetState().IsKeyDown(Keys.Left))
+				{
+					drawer.MoveCamera(Vector3.Transform(drawer.CameraPos(), rotateL));
+				}
+				if (Keyboard.GetState().IsKeyDown(Keys.Right))
+				{
+					drawer.MoveCamera(Vector3.Transform(drawer.CameraPos(), rotateR));
+				}
+				if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) &&
+					Keyboard.GetState().IsKeyDown(Keys.Enter))
+				{
+					drawer.ToggleFullscreen();
+				}
 			}
 			// mouse input
 			if (Mouse.GetState().ScrollWheelValue < previousScrollValue)
