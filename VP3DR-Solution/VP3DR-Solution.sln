@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vector-Library", "Vector-Li
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vector-Player-3DR", "Vector-Player-3DR\Vector-Player-3DR.csproj", "{028BFAA2-1C43-4CB9-8A4C-FC3CA8F8908B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terrain", "TerrainScene\Terrain.csproj", "{95EC4F1A-7596-46BE-997E-22B2E4755F66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Terrain", "TerrainScene\Terrain.csproj", "{95EC4F1A-7596-46BE-997E-22B2E4755F66}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{198FFA70-AB62-43E5-B5FD-D6789627F9E5}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

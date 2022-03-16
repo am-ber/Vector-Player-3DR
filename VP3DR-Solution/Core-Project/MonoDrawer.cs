@@ -23,7 +23,7 @@ namespace Core_Project
 		private Vector3 camTarget, camPosition;
 		private Matrix projectionMatrix, viewMatrix, worldMatrix;
 		private BasicEffect basicEffect;
-		public MonoDrawer(int width, int height, Action onExit, Logger log) 
+		public MonoDrawer(int width, int height, Action onExit, Logger log)
 		{
 			this.log = log;
 			exitCallBack = onExit;
@@ -84,36 +84,36 @@ namespace Core_Project
 			basicEffect.View = viewMatrix;
 			basicEffect.World = worldMatrix;
 
-            // optimization
-            RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.None;
-            GraphicsDevice.RasterizerState = rasterizerState;
+			// optimization
+			RasterizerState rasterizerState = new RasterizerState();
+			rasterizerState.CullMode = CullMode.None;
+			GraphicsDevice.RasterizerState = rasterizerState;
 
-            // draw scene and color
-            foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
+			// draw scene and color
+			foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
 			{
 				pass.Apply();
 			}
 			sceneManager.activeScene.Draw(this);
 		}
-        protected override void UnloadContent()
-        {
-            base.UnloadContent();
-        }
-        protected override void OnExiting(object sender, EventArgs args)
-        {
-            base.OnExiting(sender, args);
+		protected override void UnloadContent()
+		{
+			base.UnloadContent();
+		}
+		protected override void OnExiting(object sender, EventArgs args)
+		{
+			base.OnExiting(sender, args);
 			log.Log("");
 			exitCallBack();
 		}
-        protected void OnKey(Keys key)
-        {
+		protected void OnKey(Keys key)
+		{
 			log.Log($"Key: {Enum.GetName(key)}");
-        }
+		}
 		#region Interface Accessibles
 		void IDrawer.Log(string message, IDrawer.Level level)
 		{
-			log.Log(message, (Logger.Level)((int) level));
+			log.Log(message, (Logger.Level)((int)level));
 		}
 		public void CameraLookAt(float x, float y, float z)
 		{
@@ -140,15 +140,15 @@ namespace Core_Project
 			return GraphicsDevice;
 		}
 		public GraphicsDeviceManager GetGraphicsDeviceManager()
-        {
+		{
 			return graphics;
-        }
+		}
 		public SpriteBatch GetSpriteBatch()
 		{
 			return spriteBatch;
 		}
 		public void ToggleFullscreen()
-        {
+		{
 			if (fullscreen)
 			{
 				graphics.PreferredBackBufferWidth = defaultWindowSize.Item1;
