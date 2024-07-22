@@ -1,21 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFramework>net8.0-windows7.0</TargetFramework>
 		<RootNamespace>Vector_Library</RootNamespace>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="CSCore" Version="1.2.1.2" />
-		<PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.0.1641" />
-	</ItemGroup>
-	<ItemGroup>
-	  <None Update="Shaders\PixelShader.frag">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Shaders\VertexShader.vert">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+		<PackageReference Include="Raylib-cs" Version="6.1.1" />
 	</ItemGroup>
 </Project>

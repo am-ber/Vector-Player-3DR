@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Managers
+namespace Vector_Library.Managers
 {
 	public static class FileManager
 	{

@@ -1,10 +1,9 @@
-﻿using Core_Project;
-using Vector_Library;
-using static Vector_Library.IScene;
+﻿using Vector_Library.Interfaces;
+using static Vector_Library.Interfaces.IScene;
 
 namespace Terrain
 {
-	public class TerrainScene : IScene
+    public class TerrainScene : IScene
 	{
 		private SceneInfo info;
 		SceneInfo IScene.Info
@@ -20,7 +19,7 @@ namespace Terrain
 				Description = "Fly over an infinite generation of terrain with the original vector landscape that started it all."
 			};
 		}
-		public void Load(IDrawer d)
+		public void Load()
 		{
 
 		}
@@ -28,7 +27,7 @@ namespace Terrain
 		{
 
 		}
-		public void Draw(IDrawer d)
+		public void Draw()
 		{
 			
 		}

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core_Project
+namespace Vector_Library.Processors
 {
 	internal class AudioProcessor
 	{

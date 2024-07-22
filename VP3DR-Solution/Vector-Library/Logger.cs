@@ -1,7 +1,8 @@
 ﻿using System.Reflection;
 using System.Text;
+using Vector_Library.Managers;
 
-namespace Managers
+namespace Vector_Library
 {
 	public class Logger
 	{
