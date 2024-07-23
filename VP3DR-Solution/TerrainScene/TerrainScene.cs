@@ -9,6 +9,8 @@ namespace Terrain
 		public SceneInfo Info { get; }
 		private Core core;
 		private Logger logger;
+		public TerrainScene() : this(Core.Instance) { }
+
 		public TerrainScene(Core core)
 		{
 			this.core = core;

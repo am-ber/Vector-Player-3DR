@@ -22,6 +22,11 @@ namespace Vector_Library.Managers
 			SetActiveScene(0);
 			logger.Log("SceneManager initialized...");
 		}
+		/// <summary>
+		/// Used to load <seealso cref="IScene"/> objects dynamically from a folder.
+		/// If no folder is given we will check in ..\Scenes where ".." is the executing assembly.
+		/// </summary>
+		/// <param name="folderLocation"></param>
 		public void LoadScenes(string? folderLocation = null)
 		{
 			// Check for folderLocation
@@ -35,30 +40,30 @@ namespace Vector_Library.Managers
 				// check if a scene folder exists, and make it if it doesn't and back out
 				if (FileManager.CreateDirectory(folderLocation))
 				{
-					logger.Log($"There wasn't a scenes folder in {folderLocation}, so one was created. Please move all Scene .dll's to that location.", Logger.Level.warn);
+					logger.Log($"There wasn't a folder named {folderLocation}, so one was created. Please move all Scene .dll's to that location.", Logger.Level.warn);
 					return;
 				}
 				// load all files from the scene folder
 				logger.Log($"Loading scenes from {folderLocation}...");
 				string[] sceneFiles = Directory.GetFiles(folderLocation);
-				List<string> actualDlls = new List<string>();
-				foreach (string s in sceneFiles)
+				List<string> foundDlls = new List<string>();
+				foreach (string file in sceneFiles)
 				{
-					string fileExt = Path.GetExtension(s);
+					string fileExt = Path.GetExtension(file);
 					if (fileExt == ".dll")
 					{
-						actualDlls.Add(s);
+						foundDlls.Add(file);
 					}
 				}
 				logger.Log($"Found {sceneFiles.Length} potential new scenes.");
 				// populate scenes
-				foreach (string s in actualDlls)
+				foreach (string dllFile in foundDlls)
 				{
-					logger.Log($"Attempting to bind {s} to a scene object.");
+					logger.Log($"Attempting to bind {dllFile} to a scene object.");
 					try
 					{
 						// load the assembly and check type
-						Assembly dll = Assembly.LoadFile(s);
+						Assembly dll = Assembly.LoadFile(dllFile);
 						foreach (Type type in dll.GetTypes())
 						{
 							// add it to the list if its an IScene
@@ -77,7 +82,7 @@ namespace Vector_Library.Managers
 					}
 					catch (Exception e)
 					{
-						logger.Log($"Couldn't load file {Path.GetFileName(s)} because {e.Message}", Logger.Level.warn);
+						logger.Log($"Couldn't load file {Path.GetFileName(dllFile)} because {e.Message}", Logger.Level.warn);
 					}
 				}
 			}

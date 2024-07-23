@@ -28,6 +28,10 @@ namespace Vector_Library
 					"Kill the existing instance first if you want to start a new Core!", Logger.Level.error);
 				return;
 			}
+			// After singleton pattern checking we initialize the rest of the object.
+			Instance = this;
+			this.defaultWindowSize = defaultWindowSize;
+
 			logActive = false;
 			macroWatch = new Stopwatch();
 			microWatch = new Stopwatch();
@@ -38,9 +42,6 @@ namespace Vector_Library
 			InitializeProcessors();
 			macroWatch.Stop();
 			logger.Log($"Initialized everything in {macroWatch.ElapsedMilliseconds} ms");
-
-			Instance = this;
-			this.defaultWindowSize = defaultWindowSize;
 		}
 		#region Initializers
 		private void InitializeLogging()
