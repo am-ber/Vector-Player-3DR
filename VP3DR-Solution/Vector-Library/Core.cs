@@ -1,107 +1,97 @@
 ﻿using System.Diagnostics;
+using System.Reflection;
 using System.Timers;
+using Vector_Library.Managers;
 using Vector_Library.Processors;
 
 namespace Vector_Library
 {
-    public class Core
-    {
-        public static Core Instance = new Core();
-        // public
-        public static readonly double version = 0.1;
-        public Logger log;
-        public bool logActive = false;
-        // private
-        private MonoDrawer drawer;
-        private System.Timers.Timer timer;
-        private Stopwatch sw = new Stopwatch();
-        // methods
-        public Core()
-        {
-            sw.Start();
-            InitializeLogging();
-            InitializeProfiling();
-            sw.Stop();
-            Log($"Initialized logging and profiling in {sw.ElapsedMilliseconds}m");
-            sw.Start();
-            InitializeDrawWindow();
-            sw.Stop();
-            Log($"Initialized drawing window in {sw.ElapsedMilliseconds}m");
-        }
-        private void InitializeLogging()
-        {
-            // create log file
-            try
-            {
-                log = new Logger($"VP3DR_log_{DateTime.Now.ToString("M-dd-yy--HH-mm-ss")}.log");
-                log.Log($"Initializing version {version}...");
-                logActive = true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error creating logger, no logging will be done for this session: {e.Message}\n{e.StackTrace}");
-            }
-        }
-        private void InitializeProfiling()
-        {
-            try
-            {
-                // create log writting event every 10 seconds
-                timer = new System.Timers.Timer(10000);
-                timer.Elapsed += WriteEvent;
-                timer.AutoReset = true;
-                timer.Enabled = true;
-            }
-            catch (Exception e)
-            {
-                Log($"Error creating timer event: {e.Message}\n{e.StackTrace}", Logger.Level.error);
-            }
-        }
-        private static void WriteEvent(object source, ElapsedEventArgs e)
-        {
-            Instance.log.Write();
-        }
-        private void InitializeDrawWindow()
-        {
-            try
-            {
-                drawer = new MonoDrawer(1280, 720, Exit, log);
-            }
-            catch (Exception e)
-            {
-                Log($"Couldn't make drawer: {e.Message}\n{e.StackTrace}");
-            }
-        }
-        public void Run()
-        {
-            try
-            {
+	public class Core
+	{
+		public static Core Instance;
+		// public
+		public static readonly double version = 0.1;
+		public Logger logger;
+		public bool logActive = false;
+		// private
+		private MonoDrawer drawer;
+		private Stopwatch sw = new Stopwatch();
+		private SceneManager sceneManager;
+		private InputManager inputManager;
+		// methods
+		public Core()
+		{
+			if (Instance != null)
+			{
+				Instance.logger.Log("A new instance of core was started but one already exists!\n" +
+					"Kill the existing instance first if you want to start a new Core!", Logger.Level.error);
+				return;
+			}
+			sw.Start();
+			InitializeLogging();
+			sw.Stop();
+			logger.Log($"Initialized logging and profiling in {sw.ElapsedMilliseconds} ms");
+			sw.Start();
+			InitializeDrawWindow();
+			InitializeManagers();
+			sw.Stop();
+			logger.Log($"Initialized everything else in {sw.ElapsedMilliseconds} ms");
 
-            }
-            catch (Exception e)
-            {
-                Log($"Error running drawer: {e.Message}\n{e.StackTrace}");
-            }
-        }
-        public void Exit()
-        {
-            Log("Closing application...");
-            if (logActive)
-            {
-                timer.Stop();
-                log.Write();
-            }
-        }
-        public void Log(string message, Logger.Level level = Logger.Level.info)
-        {
-            if (logActive)
-            {
-                log.Log(message, level);
-            }
-            else
-            {
-                Console.WriteLine(message);
-            }
-        }
-    }
+			Instance = this;
+		}
+		#region Initializers
+		private void InitializeLogging()
+		{
+			// create log file
+			try
+			{
+				logger = new Logger();
+				logger.Log($"Initializing version {version}...");
+				logActive = true;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"Error creating logger, no logging will be done for this session: {e.Message}\n{e.StackTrace}");
+			}
+		}
+		private void InitializeDrawWindow()
+		{
+			try
+			{
+				drawer = new MonoDrawer(1280, 720, logger);
+			}
+			catch (Exception e)
+			{
+				logger.Log($"Couldn't make drawer: {e.Message}\n{e.StackTrace}");
+			}
+		}
+		private void InitializeManagers()
+		{
+			inputManager = new InputManager();
+			sceneManager = new SceneManager(logger);
+			sceneManager.LoadScenes();
+		}
+		#endregion
+		/// <summary>
+		/// Runs the core execution of the Vector Player Library.
+		/// This is expected to be the entry point after creating
+		/// an instance of the Core.
+		/// </summary>
+		public void Run()
+		{
+			try
+			{
+
+			}
+			catch (Exception e)
+			{
+				logger.Log($"Error running drawer: {e.Message}\n{e.StackTrace}");
+			}
+			Exit();
+		}
+		public void Exit()
+		{
+			logger.Log("Closing application...");
+		}
+	}
 }

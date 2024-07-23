@@ -1,16 +1,12 @@
 ﻿using System;
+using Raylib_cs;
 
 namespace Vector_Library.Managers
 {
 	public class InputManager
 	{
-		private int previousScrollValue;
 		public InputManager()
 		{
-		}
-		public void CheckInput()
-		{
-
 		}
 	}
 }

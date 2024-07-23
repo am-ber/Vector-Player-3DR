@@ -13,73 +13,98 @@ namespace Vector_Library
 			error
 		}
 		public bool initialized = false;
+		public string fileName = string.Empty;
+		public string directory = string.Empty;
 		// private
-		private string fileName = string.Empty;
-		private string? directory = string.Empty;
-		private StringBuilder log = new StringBuilder();
 		private bool spamProtection = true;
+		private StreamWriter logFile;
 		// methods
-		public Logger(string fileName)
+		/// <summary>
+		/// This handles all the logging for the Core application and every other library function.
+		/// It will create a file in a specified directory OR in the executing assembly.
+		/// </summary>
+		/// <param name="fileName"></param>
+		/// <param name="directory"></param>
+		public Logger(string? fileName = null, string? directory = null)
 		{
-			this.fileName = fileName;
-			directory = string.Concat(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"\logs\");
-			// check if the logging folder is there
-			
-			if (FileManager.ForceDir(directory))
+			// Check for the file directory
+			if (directory == null || directory.Equals(string.Empty))
 			{
-				Log($"Created directory: {directory}");
+				this.directory = string.Concat(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"\logs\");
+			} else
+			{
+				this.directory = directory;
 			}
-			else
+			// Try to make the logging folder
+			if (FileManager.CreateDirectory(this.directory))
 			{
-				Log($"Couldn't make directory: {directory}");
+				Log($"Created directory: {this.directory}");
+			} else
+			{
+				Log($"Couldn't make directory: {this.directory}\n This directory might already exist.");
+			}
+			// Check for the file name
+			if (fileName == null || fileName.Equals(string.Empty))
+			{
+				this.fileName = $"VP3DR_log_{DateTime.Now.ToString("M-dd-yy--HH-mm-ss")}.log";
+			} else
+			{
+				this.fileName = fileName;
+			}
+			// Try to make the logging file in the directory
+			if (FileManager.CreateFile(this.directory, this.fileName))
+			{
+				Log($"Created file named: {this.fileName}");
+				logFile = File.AppendText(this.directory + this.fileName);
+			} else
+			{
+				Log($"Couldn't make the file: {this.fileName} which means there might not be a logging file for this session!", Level.warn);
 			}
 			initialized = true;
 		}
+		/// <summary>
+		/// Used to log onto the existing log file that was created on initialization.
+		/// This will automatically append to the file as well.
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="level"></param>
 		public void Log(string message, Level level = Level.info)
 		{
-			// check for any errors or warnings
-			string addition = string.Empty;
+			// Check for any errors or warnings
+			StringBuilder sb = new StringBuilder();
 			switch (level)
 			{
 				case Level.warn:
-					addition = "\t------- warning -------\n";
+					sb.Append("\t------- warning -------\n");
 					break;
 				case Level.error:
-					addition = "\t------- ERROR -------\n";
+					sb.Append("\t------- ERROR -------\n");
 					break;
 			}
-			// write to console
-			Console.Write(addition);
-			Console.WriteLine(message);
-			// append to log file
+			sb.Append(message);
+			sb.Append("\n");
+			Console.WriteLine(sb.ToString());
+			// Append to log file
 			if (initialized)
 			{
-				log.Append(addition);
-				log.AppendLine(message);
+				// Try to write to file
+				try
+				{
+					// Lock the file for thread safety first
+					lock (logFile)
+					{
+						logFile.Write(sb.ToString());
+						logFile.Flush();
+					}
+					spamProtection = true;
+				}
+				catch (Exception e)
+				{
+					if (spamProtection)
+						Console.WriteLine($"Exception while writting log to file: {e.Message}\n{e.StackTrace}");
+					spamProtection = false;
+				}
 			}
-		}
-		public bool Write()
-		{
-			// if there's no buffer then don't need to do anything
-			if (log.Length <= 0)
-			{
-				return true;
-			}
-			// try to write to file
-			try
-			{
-				File.AppendAllText(@$"{directory}{fileName}", log.ToString());
-				log.Clear();
-				spamProtection = true;
-				return true;
-			}
-			catch (Exception e)
-			{
-				if (spamProtection)
-					Console.WriteLine($"Exception while writting log to file: {e.Message}\n{e.StackTrace}");
-				spamProtection = false;
-			}
-			return false;
 		}
 	}
 }

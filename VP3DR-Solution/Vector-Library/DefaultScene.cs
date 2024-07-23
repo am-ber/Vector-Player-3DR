@@ -1,7 +1,7 @@
-﻿using System;
-using static Vector_Library.Interfaces.IScene;
-using System.Reflection;
+﻿using System.Numerics;
+using Raylib_cs;
 using Vector_Library.Interfaces;
+using static Vector_Library.Interfaces.IScene;
 
 namespace Vector_Library
 {
@@ -30,6 +30,9 @@ namespace Vector_Library
 		}
 		public void Draw()
 		{
+			Raylib.ClearBackground(Color.RayWhite);
+			Vector2 windowScale = Raylib.GetWindowScaleDPI();
+			Raylib.DrawText($"{info.Name}\n{info.Description}", (int)windowScale.X, (int)windowScale.Y, 20, Color.Red);
 		}
 		public void Dispose()
 		{

@@ -22,16 +22,34 @@ namespace Vector_Library.Managers
 			}
 			return sender;
 		}
-		public static bool ForceDir(string directory)
+		public static bool CreateDirectory(string directory)
 		{
 			try
 			{
+				if (Directory.Exists(directory))
+				{
+					return false;
+				}
 				Directory.CreateDirectory(directory);
 				return true;
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine(e.Message);
+				return false;
+			}
+		}
+		public static bool CreateFile(string path, string fileName)
+		{
+			try
+			{
+				FileStream f = File.Create(path + fileName);
+				f.Close();
+				return true;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"{e.Message}");
 				return false;
 			}
 		}

@@ -10,31 +10,36 @@ namespace Vector_Library.Managers
 		public IScene activeScene;
 		private IScene fallBack;
 		private List<IScene> loadedScenes;
-		private Logger log;
-		public SceneManager(Logger log)
+		private Logger logger;
+		public SceneManager(Logger logger)
 		{
-			this.log = log;
+			this.logger = logger;
 			loadedScenes = new List<IScene>();
 			// set fallback scene
 			fallBack = new DefaultScene();
 			loadedScenes.Add(fallBack);
 			SetActiveScene(0);
-			Log("SceneManager initialized...");
+			logger.Log("SceneManager initialized...");
 		}
-		public void LoadScenes(string folderLocation)
+		public void LoadScenes(string? folderLocation = null)
 		{
-			string sceneFolder = @"\Scenes";
+			// Check for folderLocation
+			if (folderLocation == null || folderLocation.Equals(string.Empty))
+			{
+				string sceneFolder = @"\Scenes";
+				folderLocation = string.Concat(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), sceneFolder);
+			}
 			try
 			{
 				// check if a scene folder exists, and make it if it doesn't and back out
-				if (FileManager.ForceDir(string.Concat(folderLocation, sceneFolder)))
+				if (FileManager.CreateDirectory(folderLocation))
 				{
-					Log($"There wasn't a scenes folder in {folderLocation}, so one was created. Please move all Scene .dll's to that location.", Logger.Level.warn);
+					logger.Log($"There wasn't a scenes folder in {folderLocation}, so one was created. Please move all Scene .dll's to that location.", Logger.Level.warn);
 					return;
 				}
 				// load all files from the scene folder
-				Log($"Loading scenes from {string.Concat(folderLocation, sceneFolder)}...");
-				string[] sceneFiles = Directory.GetFiles(string.Concat(folderLocation, sceneFolder));
+				logger.Log($"Loading scenes from {folderLocation}...");
+				string[] sceneFiles = Directory.GetFiles(folderLocation);
 				List<string> actualDlls = new List<string>();
 				foreach (string s in sceneFiles)
 				{
@@ -44,9 +49,11 @@ namespace Vector_Library.Managers
 						actualDlls.Add(s);
 					}
 				}
+				logger.Log($"Found {sceneFiles.Length} scenes.");
 				// populate scenes
 				foreach (string s in actualDlls)
 				{
+					logger.Log($"Attempting to bind {s} to a scene object.");
 					try
 					{
 						// load the assembly and check type
@@ -64,13 +71,13 @@ namespace Vector_Library.Managers
 					}
 					catch (Exception e)
 					{
-						Log($"Couldn't load file {Path.GetFileName(s)} because {e.Message}", Logger.Level.warn);
+						logger.Log($"Couldn't load file {Path.GetFileName(s)} because {e.Message}", Logger.Level.warn);
 					}
 				}
 			}
 			catch (Exception e)
 			{
-				Log($"Error in loading scenes: {e.Message}\n{e.StackTrace}", Logger.Level.error);
+				logger.Log($"Error in loading scenes: {e.Message}\n{e.StackTrace}", Logger.Level.error);
 			}
 		}
 		public bool SetActiveScene(int index)
@@ -89,13 +96,9 @@ namespace Vector_Library.Managers
 			{
 				activeScene = fallBack;
 				activeScene.Load();
-				Log($"Couldn't load scene at {index} index.\n{e.Message}\n{e.StackTrace}", Logger.Level.error);
+				logger.Log($"Couldn't load scene at {index} index.\n{e.Message}\n{e.StackTrace}", Logger.Level.error);
 				return false;
 			}
-		}
-		private void Log(string message, Logger.Level level = Logger.Level.info)
-		{
-			log.Log(message, level);
 		}
 	}
 }
