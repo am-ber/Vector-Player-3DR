@@ -29,7 +29,7 @@ namespace Vector_Library
 		public void Draw()
 		{
 			Raylib.ClearBackground(Color.Black);
-			Raylib.DrawText($"{Info.Name}\tFPS: {Raylib.GetFPS()}\n{Info.Description}", core.defaultWindowSize.width / 2, core.defaultWindowSize.height / 2, 20, Color.Red);
+			Raylib.DrawText($"{Info.Name}\tFPS: {Raylib.GetFPS()}\n{Info.Description}", core.defaultWindowSize.width / 4, core.defaultWindowSize.height / 2, 20, Color.Red);
 		}
 		public void Dispose()
 		{

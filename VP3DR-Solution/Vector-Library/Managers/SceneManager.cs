@@ -3,18 +3,22 @@ using System.Reflection;
 using System.Text;
 using Vector_Library;
 using Vector_Library.Interfaces;
+using Vector_Library.Processors;
 
 namespace Vector_Library.Managers
 {
 	public class SceneManager
 	{
 		public IScene activeScene;
+		// Privates
 		private IScene fallBack;
 		private List<IScene> loadedScenes;
 		private Logger logger;
-		public SceneManager(Core core)
+		private SceneProcessor sceneProcessor;
+		public SceneManager(Core core, SceneProcessor sceneProcessor)
 		{
 			logger = core.logger;
+			this.sceneProcessor = sceneProcessor;
 			loadedScenes = new List<IScene>();
 			// set fallback scene
 			fallBack = new DefaultScene(core);

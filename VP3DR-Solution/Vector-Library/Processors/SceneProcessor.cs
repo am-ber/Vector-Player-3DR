@@ -10,27 +10,28 @@ namespace Vector_Library.Processors
 	{
 		private bool fullscreen = false;
 		private (int width, int height) defaultWindowSize;
-		// objects
 		private Logger log;
-		public SceneProcessor(int width, int height, Logger log)
+		private IScene currentScene;
+		private Core core;
+		public SceneProcessor(Core core, Logger log)
 		{
 			this.log = log;
-
-			defaultWindowSize = (width, height);
+			this.core = core;
 		}
-		public void Initialize()
+		public void Initialize(IScene scene)
 		{
-			Raylib.InitWindow(defaultWindowSize.width, defaultWindowSize.height, "Vector Player 3D Remastered");
+			currentScene = scene;
+			Raylib.InitWindow(defaultWindowSize.width, defaultWindowSize.height, currentScene.Info.Name);
 			log.Log("Drawer Initialized...");
 		}
 		public void Update()
 		{
 			
 		}
-		public void Draw(IScene scene)
+		public void Draw()
 		{
 			Raylib.BeginDrawing();
-			scene.Draw();
+			currentScene.Draw();
 			Raylib.EndDrawing();
 		}
 	}

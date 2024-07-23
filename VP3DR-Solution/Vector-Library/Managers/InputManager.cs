@@ -11,5 +11,9 @@ namespace Vector_Library.Managers
 			logger = core.logger;
 			logger.Log("Input Manager Initialized...");
 		}
+		public void OnMousePress()
+		{
+			
+		}
 	}
 }

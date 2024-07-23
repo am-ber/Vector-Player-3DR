@@ -12,7 +12,6 @@ namespace Vector_Library
 		public static readonly double version = 0.2;
 		public Logger logger;
 		public bool logActive;
-		public int iterationsPerSecond;
 		public (int width, int height) defaultWindowSize;
 		// private
 		private SceneProcessor sceneProcessor;
@@ -38,8 +37,8 @@ namespace Vector_Library
 			// Start stop watches for analytics
 			macroWatch.Start();
 			InitializeLogging();
-			InitializeManagers();
 			InitializeProcessors();
+			InitializeManagers();
 			macroWatch.Stop();
 			logger.Log($"Initialized everything in {macroWatch.ElapsedMilliseconds} ms");
 		}
@@ -62,7 +61,7 @@ namespace Vector_Library
 			// Scene Manager
 			logger.Log($"Initialized Input Manager in {microWatch.ElapsedMilliseconds} ms");
 			microWatch.Restart();
-			sceneManager = new SceneManager(this);
+			sceneManager = new SceneManager(this, sceneProcessor);
 			sceneManager.LoadScenes();
 			logger.Log($"Initialized Scene Manager in {microWatch.ElapsedMilliseconds} ms");
 			microWatch.Stop();
@@ -71,8 +70,7 @@ namespace Vector_Library
 		{
 			// Scene Processor
 			microWatch.Restart();
-			sceneProcessor = new SceneProcessor(defaultWindowSize.width, defaultWindowSize.height, logger);
-			sceneProcessor.Initialize();
+			sceneProcessor = new SceneProcessor(this, logger);
 			logger.Log($"Initialized Scene Processing in {microWatch.ElapsedMilliseconds} ms");
 			microWatch.Stop();
 		}
@@ -91,9 +89,8 @@ namespace Vector_Library
 				{
 					microWatch.Restart();
 					sceneProcessor.Update();
-					sceneProcessor.Draw(sceneManager.activeScene);
+					sceneProcessor.Draw();
 					microWatch.Stop();
-					SetIterationCounter(microWatch.ElapsedMilliseconds);
 				}
 			}
 			catch (Exception e)
@@ -105,17 +102,6 @@ namespace Vector_Library
 		public void Exit()
 		{
 			logger.Log("Closing application...");
-		}
-		private void SetIterationCounter(long ellapsedMilliseconds)
-		{
-			try
-			{
-				iterationsPerSecond = (int)MathF.Round(1000 / ellapsedMilliseconds);
-			}
-			catch (DivideByZeroException)
-			{
-				iterationsPerSecond = 1000;
-			}
 		}
 	}
 }
