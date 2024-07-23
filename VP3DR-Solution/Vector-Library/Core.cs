@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Reflection;
-using System.Timers;
+using Raylib_cs;
 using Vector_Library.Managers;
 using Vector_Library.Processors;
 
@@ -10,16 +9,18 @@ namespace Vector_Library
 	{
 		public static Core Instance;
 		// public
-		public static readonly double version = 0.1;
+		public static readonly double version = 0.2;
 		public Logger logger;
-		public bool logActive = false;
+		public bool logActive;
+		public int iterationsPerSecond;
+		public (int width, int height) defaultWindowSize;
 		// private
-		private MonoDrawer drawer;
-		private Stopwatch sw = new Stopwatch();
+		private SceneProcessor sceneProcessor;
+		private Stopwatch macroWatch, microWatch;
 		private SceneManager sceneManager;
 		private InputManager inputManager;
 		// methods
-		public Core()
+		public Core((int width, int height) defaultWindowSize)
 		{
 			if (Instance != null)
 			{
@@ -27,49 +28,52 @@ namespace Vector_Library
 					"Kill the existing instance first if you want to start a new Core!", Logger.Level.error);
 				return;
 			}
-			sw.Start();
+			logActive = false;
+			macroWatch = new Stopwatch();
+			microWatch = new Stopwatch();
+			// Start stop watches for analytics
+			macroWatch.Start();
 			InitializeLogging();
-			sw.Stop();
-			logger.Log($"Initialized logging and profiling in {sw.ElapsedMilliseconds} ms");
-			sw.Start();
-			InitializeDrawWindow();
 			InitializeManagers();
-			sw.Stop();
-			logger.Log($"Initialized everything else in {sw.ElapsedMilliseconds} ms");
+			InitializeProcessors();
+			macroWatch.Stop();
+			logger.Log($"Initialized everything in {macroWatch.ElapsedMilliseconds} ms");
 
 			Instance = this;
+			this.defaultWindowSize = defaultWindowSize;
 		}
 		#region Initializers
 		private void InitializeLogging()
 		{
+			microWatch.Restart();
 			// create log file
-			try
-			{
-				logger = new Logger();
-				logger.Log($"Initializing version {version}...");
-				logActive = true;
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine($"Error creating logger, no logging will be done for this session: {e.Message}\n{e.StackTrace}");
-			}
-		}
-		private void InitializeDrawWindow()
-		{
-			try
-			{
-				drawer = new MonoDrawer(1280, 720, logger);
-			}
-			catch (Exception e)
-			{
-				logger.Log($"Couldn't make drawer: {e.Message}\n{e.StackTrace}");
-			}
+			logger = new Logger();
+			logger.Log($"Initializing version {version}...");
+			logActive = true;
+			logger.Log($"Initialized logging in {microWatch.ElapsedMilliseconds} ms");
+			microWatch.Stop();
 		}
 		private void InitializeManagers()
 		{
-			inputManager = new InputManager();
-			sceneManager = new SceneManager(logger);
+			// Input Manager
+			microWatch.Restart();
+			inputManager = new InputManager(this);
+			// Scene Manager
+			logger.Log($"Initialized Input Manager in {microWatch.ElapsedMilliseconds} ms");
+			microWatch.Restart();
+			sceneManager = new SceneManager(this);
 			sceneManager.LoadScenes();
+			logger.Log($"Initialized Scene Manager in {microWatch.ElapsedMilliseconds} ms");
+			microWatch.Stop();
+		}
+		private void InitializeProcessors()
+		{
+			// Scene Processor
+			microWatch.Restart();
+			sceneProcessor = new SceneProcessor(defaultWindowSize.width, defaultWindowSize.height, logger);
+			sceneProcessor.Initialize();
+			logger.Log($"Initialized Scene Processing in {microWatch.ElapsedMilliseconds} ms");
+			microWatch.Stop();
 		}
 		#endregion
 		/// <summary>
@@ -79,9 +83,17 @@ namespace Vector_Library
 		/// </summary>
 		public void Run()
 		{
+			logger.Log("\n----------------------\nRunning Core method...\n----------------------\n");
 			try
 			{
-
+				while (!Raylib.WindowShouldClose())
+				{
+					microWatch.Restart();
+					sceneProcessor.Update();
+					sceneProcessor.Draw(sceneManager.activeScene);
+					microWatch.Stop();
+					SetIterationCounter(microWatch.ElapsedMilliseconds);
+				}
 			}
 			catch (Exception e)
 			{
@@ -92,6 +104,17 @@ namespace Vector_Library
 		public void Exit()
 		{
 			logger.Log("Closing application...");
+		}
+		private void SetIterationCounter(long ellapsedMilliseconds)
+		{
+			try
+			{
+				iterationsPerSecond = (int)MathF.Round(1000 / ellapsedMilliseconds);
+			}
+			catch (DivideByZeroException)
+			{
+				iterationsPerSecond = 1000;
+			}
 		}
 	}
 }

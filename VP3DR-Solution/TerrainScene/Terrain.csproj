@@ -4,9 +4,14 @@
 		<TargetFramework>net8.0-windows7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<BaseOutputPath></BaseOutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Vector-Library\Vector-Library.csproj" />
 	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="call copy-scene.bat $(TargetPath) E:\Documents\GitHub\Vector-Player-3DR\VP3DR-Solution\Vector-Player-3DR\bin\Debug\net8.0-windows7.0\Scenes" />
+	</Target>
 </Project>

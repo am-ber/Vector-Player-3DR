@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Reflection;
+using System.Text;
 using Vector_Library;
 using Vector_Library.Interfaces;
 
 namespace Vector_Library.Managers
 {
-    public class SceneManager
+	public class SceneManager
 	{
 		public IScene activeScene;
 		private IScene fallBack;
 		private List<IScene> loadedScenes;
 		private Logger logger;
-		public SceneManager(Logger logger)
+		public SceneManager(Core core)
 		{
-			this.logger = logger;
+			logger = core.logger;
 			loadedScenes = new List<IScene>();
 			// set fallback scene
-			fallBack = new DefaultScene();
+			fallBack = new DefaultScene(core);
 			loadedScenes.Add(fallBack);
 			SetActiveScene(0);
 			logger.Log("SceneManager initialized...");
@@ -49,7 +50,7 @@ namespace Vector_Library.Managers
 						actualDlls.Add(s);
 					}
 				}
-				logger.Log($"Found {sceneFiles.Length} scenes.");
+				logger.Log($"Found {sceneFiles.Length} potential new scenes.");
 				// populate scenes
 				foreach (string s in actualDlls)
 				{
@@ -60,12 +61,17 @@ namespace Vector_Library.Managers
 						Assembly dll = Assembly.LoadFile(s);
 						foreach (Type type in dll.GetTypes())
 						{
-							if (type.IsAssignableFrom(typeof(IScene)))
+							// add it to the list if its an IScene
+							dynamic? instanceType = Activator.CreateInstance(type);
+							if (instanceType != null)
 							{
-								// add it to the list if its an IScene
-								dynamic? c = Activator.CreateInstance(type);
-								if (c != null)
-									loadedScenes.Add((IScene)c);
+								// check if the instance type is of IScene so we can add it to the list
+								if (instanceType.GetType().IsAssignableTo(typeof(IScene)))
+								{
+									IScene scene = (IScene)instanceType;
+									loadedScenes.Add(scene);
+									logger.Log($"Successfully added {scene.Info.Name}");
+								}
 							}
 						}
 					}
@@ -79,7 +85,28 @@ namespace Vector_Library.Managers
 			{
 				logger.Log($"Error in loading scenes: {e.Message}\n{e.StackTrace}", Logger.Level.error);
 			}
+			// Iterate through the list of scenes to log what all we have in memory
+			StringBuilder printableSceneList = new StringBuilder();
+			foreach (IScene scene in loadedScenes)
+			{
+				printableSceneList.Append($"{scene.Info.Name}, ");
+			}
+			logger.Log($"Currently loaded scenes ({loadedScenes.Count}): \n\t{printableSceneList.ToString()}");
 		}
+		/// <summary>
+		/// Returns wither it successfully added the scene given to the active scene or not.
+		/// </summary>
+		/// <param name="scene"></param>
+		/// <returns></returns>
+		public bool SetActiveScene(IScene scene)
+		{
+			return SetActiveScene(loadedScenes.IndexOf(scene));
+		}
+		/// <summary>
+		/// Returns wither it successfully added the index of the scene desired to the active scene or not.
+		/// </summary>
+		/// <param name="scene"></param>
+		/// <returns></returns>
 		public bool SetActiveScene(int index)
 		{
 			try

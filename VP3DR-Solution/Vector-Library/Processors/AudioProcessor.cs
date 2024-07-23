@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace Vector_Library.Processors
 {
-	internal class AudioProcessor
+	public class AudioProcessor
 	{
+		private Logger logger;
+		public AudioProcessor(Logger logger)
+		{
+			this.logger = logger;
+			logger.Log("AudioProcessor initialized...");
+		}
 	}
 }

@@ -27,38 +27,45 @@ namespace Vector_Library
 		/// <param name="directory"></param>
 		public Logger(string? fileName = null, string? directory = null)
 		{
-			// Check for the file directory
-			if (directory == null || directory.Equals(string.Empty))
+			try
 			{
-				this.directory = string.Concat(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"\logs\");
-			} else
-			{
-				this.directory = directory;
+				// Check for the file directory
+				if (directory == null || directory.Equals(string.Empty))
+				{
+					this.directory = string.Concat(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"\logs\");
+				} else
+				{
+					this.directory = directory;
+				}
+				// Try to make the logging folder
+				if (FileManager.CreateDirectory(this.directory))
+				{
+					Log($"Created directory: {this.directory}");
+				} else
+				{
+					Log($"Couldn't make directory: {this.directory}\n This directory might already exist.");
+				}
+				// Check for the file name
+				if (fileName == null || fileName.Equals(string.Empty))
+				{
+					this.fileName = $"VP3DR_log_{DateTime.Now.ToString("M-dd-yy--HH-mm-ss")}.log";
+				} else
+				{
+					this.fileName = fileName;
+				}
+				// Try to make the logging file in the directory
+				if (FileManager.CreateFile(this.directory, this.fileName))
+				{
+					Log($"Created file named: {this.fileName}");
+					logFile = File.AppendText(this.directory + this.fileName);
+				} else
+				{
+					Log($"Couldn't make the file: {this.fileName} which means there might not be a logging file for this session!", Level.warn);
+				}
 			}
-			// Try to make the logging folder
-			if (FileManager.CreateDirectory(this.directory))
+			catch (Exception e)
 			{
-				Log($"Created directory: {this.directory}");
-			} else
-			{
-				Log($"Couldn't make directory: {this.directory}\n This directory might already exist.");
-			}
-			// Check for the file name
-			if (fileName == null || fileName.Equals(string.Empty))
-			{
-				this.fileName = $"VP3DR_log_{DateTime.Now.ToString("M-dd-yy--HH-mm-ss")}.log";
-			} else
-			{
-				this.fileName = fileName;
-			}
-			// Try to make the logging file in the directory
-			if (FileManager.CreateFile(this.directory, this.fileName))
-			{
-				Log($"Created file named: {this.fileName}");
-				logFile = File.AppendText(this.directory + this.fileName);
-			} else
-			{
-				Log($"Couldn't make the file: {this.fileName} which means there might not be a logging file for this session!", Level.warn);
+				Console.WriteLine($"Error creating logger, no logging will be done for this session outside of console: {e.Message}\n{e.StackTrace}");
 			}
 			initialized = true;
 		}

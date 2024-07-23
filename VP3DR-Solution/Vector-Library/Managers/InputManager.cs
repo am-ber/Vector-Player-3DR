@@ -5,8 +5,11 @@ namespace Vector_Library.Managers
 {
 	public class InputManager
 	{
-		public InputManager()
+		private Logger logger;
+		public InputManager(Core core)
 		{
+			logger = core.logger;
+			logger.Log("Input Manager Initialized...");
 		}
 	}
 }

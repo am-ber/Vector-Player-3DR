@@ -1,19 +1,19 @@
-﻿using Vector_Library.Interfaces;
+﻿using Vector_Library;
+using Vector_Library.Interfaces;
 using static Vector_Library.Interfaces.IScene;
 
 namespace Terrain
 {
     public class TerrainScene : IScene
 	{
-		private SceneInfo info;
-		SceneInfo IScene.Info
+		public SceneInfo Info { get; }
+		private Core core;
+		private Logger logger;
+		public TerrainScene(Core core)
 		{
-			get => info;
-			set => info = value;
-		}
-		public TerrainScene()
-		{
-			info = new SceneInfo()
+			this.core = core;
+			logger = core.logger;
+			Info = new SceneInfo()
 			{
 				Name = "Terrain Generator",
 				Description = "Fly over an infinite generation of terrain with the original vector landscape that started it all."

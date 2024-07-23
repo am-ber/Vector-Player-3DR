@@ -18,8 +18,11 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
 		<Optimize>True</Optimize>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="Terrain.dll" />
+	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Vector-Library\Vector-Library.csproj" />
 	</ItemGroup>
-
 </Project>

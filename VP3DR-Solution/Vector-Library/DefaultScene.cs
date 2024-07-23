@@ -7,15 +7,14 @@ namespace Vector_Library
 {
     public class DefaultScene : IScene
 	{
-		private SceneInfo info;
-		SceneInfo IScene.Info
+		public SceneInfo Info { get; }
+		private Logger logger;
+		private Core core;
+		public DefaultScene(Core core)
 		{
-			get => info;
-			set => info = value;
-		}
-		public DefaultScene()
-		{
-			info = new SceneInfo()
+			this.core = core;
+			logger = core.logger;
+			Info = new SceneInfo()
 			{
 				Name = "Default Scene",
 				Description = "Enjoy the generic equalizer scene without needing the fancy business of hard GPU usage."
@@ -26,13 +25,11 @@ namespace Vector_Library
 		}
 		public void Update()
 		{
-
 		}
 		public void Draw()
 		{
-			Raylib.ClearBackground(Color.RayWhite);
-			Vector2 windowScale = Raylib.GetWindowScaleDPI();
-			Raylib.DrawText($"{info.Name}\n{info.Description}", (int)windowScale.X, (int)windowScale.Y, 20, Color.Red);
+			Raylib.ClearBackground(Color.Black);
+			Raylib.DrawText($"{Info.Name}\tFPS: {Raylib.GetFPS()}\n{Info.Description}", core.defaultWindowSize.width / 2, core.defaultWindowSize.height / 2, 20, Color.Red);
 		}
 		public void Dispose()
 		{
