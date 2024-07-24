@@ -9,24 +9,23 @@ namespace Vector_Library.Processors
 	public class SceneProcessor
 	{
 		private bool fullscreen = false;
-		private (int width, int height) defaultWindowSize;
-		private Logger log;
-		private IScene currentScene;
+		private Logger logger;
+		private Scene currentScene;
 		private Core core;
-		public SceneProcessor(Core core, Logger log)
+		public SceneProcessor(Core core)
 		{
-			this.log = log;
+			logger = core.logger;
 			this.core = core;
 		}
-		public void Initialize(IScene scene)
+		public void Initialize(Scene scene)
 		{
 			currentScene = scene;
-			Raylib.InitWindow(defaultWindowSize.width, defaultWindowSize.height, currentScene.Info.Name);
-			log.Log("Drawer Initialized...");
+			Raylib.InitWindow(scene.windowSize.width, scene.windowSize.height, currentScene.Info.Name);
+			logger.Log("Drawer Initialized...");
 		}
 		public void Update()
 		{
-			
+			currentScene.Update();
 		}
 		public void Draw()
 		{

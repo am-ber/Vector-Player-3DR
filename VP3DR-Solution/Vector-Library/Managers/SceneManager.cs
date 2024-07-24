@@ -4,22 +4,23 @@ using System.Text;
 using Vector_Library;
 using Vector_Library.Interfaces;
 using Vector_Library.Processors;
+using Raylib_cs;
 
 namespace Vector_Library.Managers
 {
 	public class SceneManager
 	{
-		public IScene activeScene;
+		public Scene activeScene;
 		// Privates
-		private IScene fallBack;
-		private List<IScene> loadedScenes;
+		private Scene fallBack;
+		private List<Scene> loadedScenes;
 		private Logger logger;
 		private SceneProcessor sceneProcessor;
-		public SceneManager(Core core, SceneProcessor sceneProcessor)
+		public SceneManager(Core core)
 		{
 			logger = core.logger;
-			this.sceneProcessor = sceneProcessor;
-			loadedScenes = new List<IScene>();
+			sceneProcessor = core.sceneProcessor;
+			loadedScenes = new List<Scene>();
 			// set fallback scene
 			fallBack = new DefaultScene(core);
 			loadedScenes.Add(fallBack);
@@ -27,7 +28,7 @@ namespace Vector_Library.Managers
 			logger.Log("SceneManager initialized...");
 		}
 		/// <summary>
-		/// Used to load <seealso cref="IScene"/> objects dynamically from a folder.
+		/// Used to load <seealso cref="Scene"/> objects dynamically from a folder.
 		/// If no folder is given we will check in ..\Scenes where ".." is the executing assembly.
 		/// </summary>
 		/// <param name="folderLocation"></param>
@@ -75,9 +76,9 @@ namespace Vector_Library.Managers
 							if (instanceType != null)
 							{
 								// check if the instance type is of IScene so we can add it to the list
-								if (instanceType.GetType().IsAssignableTo(typeof(IScene)))
+								if (instanceType.GetType().IsAssignableTo(typeof(Scene)))
 								{
-									IScene scene = (IScene)instanceType;
+									Scene scene = (Scene)instanceType;
 									loadedScenes.Add(scene);
 									logger.Log($"Successfully added {scene.Info.Name}");
 								}
@@ -96,7 +97,7 @@ namespace Vector_Library.Managers
 			}
 			// Iterate through the list of scenes to log what all we have in memory
 			StringBuilder printableSceneList = new StringBuilder();
-			foreach (IScene scene in loadedScenes)
+			foreach (Scene scene in loadedScenes)
 			{
 				printableSceneList.Append($"{scene.Info.Name}, ");
 			}
@@ -107,7 +108,7 @@ namespace Vector_Library.Managers
 		/// </summary>
 		/// <param name="scene"></param>
 		/// <returns></returns>
-		public bool SetActiveScene(IScene scene)
+		public bool SetActiveScene(Scene scene)
 		{
 			return SetActiveScene(loadedScenes.IndexOf(scene));
 		}
@@ -120,12 +121,13 @@ namespace Vector_Library.Managers
 		{
 			try
 			{
-				// dispose the old scene
+				// Dispose the old scene
 				if (activeScene != null)
 					activeScene.Dispose();
-				// bring in the new one from the index provided
+				// Bring in the new one from the index provided
 				activeScene = loadedScenes[index];
 				activeScene.Load();
+				sceneProcessor.Initialize(activeScene);
 				return true;
 			}
 			catch (Exception e)
@@ -135,6 +137,16 @@ namespace Vector_Library.Managers
 				logger.Log($"Couldn't load scene at {index} index.\n{e.Message}\n{e.StackTrace}", Logger.Level.error);
 				return false;
 			}
+		}
+		/// <summary>
+		/// Used to cleanup any active scenes by disposing of them.
+		/// </summary>
+		public void Exit()
+		{
+			// Dispose of the current scene
+			if (activeScene != null)
+				activeScene.Dispose();
+			Raylib.CloseWindow();
 		}
 	}
 }

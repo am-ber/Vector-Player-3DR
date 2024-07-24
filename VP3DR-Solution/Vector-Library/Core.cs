@@ -12,14 +12,14 @@ namespace Vector_Library
 		public static readonly double version = 0.2;
 		public Logger logger;
 		public bool logActive;
-		public (int width, int height) defaultWindowSize;
+		public AudioProcessor audioProcessor;
+		public SceneManager sceneManager;
+		public InputManager inputManager;
+		public SceneProcessor sceneProcessor;
 		// private
-		private SceneProcessor sceneProcessor;
 		private Stopwatch macroWatch, microWatch;
-		private SceneManager sceneManager;
-		private InputManager inputManager;
 		// methods
-		public Core((int width, int height) defaultWindowSize)
+		public Core()
 		{
 			if (Instance != null)
 			{
@@ -29,7 +29,6 @@ namespace Vector_Library
 			}
 			// After singleton pattern checking we initialize the rest of the object.
 			Instance = this;
-			this.defaultWindowSize = defaultWindowSize;
 
 			logActive = false;
 			macroWatch = new Stopwatch();
@@ -61,7 +60,7 @@ namespace Vector_Library
 			// Scene Manager
 			logger.Log($"Initialized Input Manager in {microWatch.ElapsedMilliseconds} ms");
 			microWatch.Restart();
-			sceneManager = new SceneManager(this, sceneProcessor);
+			sceneManager = new SceneManager(this);
 			sceneManager.LoadScenes();
 			logger.Log($"Initialized Scene Manager in {microWatch.ElapsedMilliseconds} ms");
 			microWatch.Stop();
@@ -70,8 +69,11 @@ namespace Vector_Library
 		{
 			// Scene Processor
 			microWatch.Restart();
-			sceneProcessor = new SceneProcessor(this, logger);
+			sceneProcessor = new SceneProcessor(this);
 			logger.Log($"Initialized Scene Processing in {microWatch.ElapsedMilliseconds} ms");
+			microWatch.Restart();
+			audioProcessor = new AudioProcessor(this);
+			logger.Log($"Initialized Audio Processing in {microWatch.ElapsedMilliseconds} ms");
 			microWatch.Stop();
 		}
 		#endregion
@@ -101,6 +103,7 @@ namespace Vector_Library
 		}
 		public void Exit()
 		{
+			sceneManager.Exit();
 			logger.Log("Closing application...");
 		}
 	}

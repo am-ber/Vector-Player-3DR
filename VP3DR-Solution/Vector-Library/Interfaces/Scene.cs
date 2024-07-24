@@ -1,9 +1,7 @@
-﻿
-
-namespace Vector_Library.Interfaces
+﻿namespace Vector_Library.Interfaces
 {
-	public interface IScene : IDisposable
-	{
+	public abstract class Scene : IDisposable
+	{ 
 		public struct SceneInfo
 		{
 			public int index;
@@ -23,18 +21,25 @@ namespace Vector_Library.Interfaces
 				Description = info.Description;
 			}
 		}
-		public SceneInfo Info { get; }
+		public (int width, int height) windowSize;
+		protected Logger logger;
+		protected Core core;
+		public SceneInfo Info { get; protected set; }
 		/// <summary>
 		/// Used as an initializer.
 		/// </summary>
-		public void Load();
+		public abstract void Load();
 		/// <summary>
 		/// Runs in a loop before the draw method.
 		/// </summary>
-		public void Update();
+		public abstract void Update();
 		/// <summary>
 		/// Runs in a loop to draw onto the screen.
 		/// </summary>
-		public void Draw();
+		public abstract void Draw();
+		/// <summary>
+		/// For cleaning up resources when a scene is discarded.
+		/// </summary>
+		public virtual void Dispose() { }
 	}
 }
