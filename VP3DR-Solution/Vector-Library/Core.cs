@@ -92,7 +92,10 @@ namespace Vector_Library
 				{
 					microWatch.Restart();
 					sceneProcessor.Update();
-					sceneProcessor.Draw();
+					if (!Raylib.WindowShouldClose())
+					{
+						sceneProcessor.Draw();
+					}
 					microWatch.Stop();
 				} while (continueRunning);
 			}

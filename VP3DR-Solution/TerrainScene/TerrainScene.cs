@@ -1,4 +1,5 @@
-﻿using Vector_Library;
+﻿using Raylib_cs;
+using Vector_Library;
 using Vector_Library.Interfaces;
 
 namespace Terrain
@@ -27,7 +28,7 @@ namespace Terrain
 		}
 		public override void Draw()
 		{
-			
+			Raylib.ClearBackground(Color.DarkPurple);
 		}
 	}
 }

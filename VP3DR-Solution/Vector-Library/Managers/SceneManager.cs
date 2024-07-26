@@ -147,7 +147,6 @@ namespace Vector_Library.Managers
 			// Dispose of the current scene
 			if (ActiveScene != null)
 				ActiveScene.Exit();
-			Raylib.CloseWindow();
 		}
 	}
 }

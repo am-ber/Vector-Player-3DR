@@ -16,7 +16,6 @@ namespace Vector_Library.Managers
 			PreviousScene = KeyboardKey.Q,
 			ToggleHardwareMonitor = KeyboardKey.M,
 			ToggleSceneInformation = KeyboardKey.Tab,
-
 		}
 		private Logger logger;
 		private Core core;
@@ -24,6 +23,7 @@ namespace Vector_Library.Managers
 		{
 			this.core = core;
 			logger = core.logger;
+			Raylib.SetExitKey(KeyboardKey.Null);
 			logger.Log("Input Manager Initialized...");
 		}
 		public void CheckInput(Scene scene)
@@ -39,7 +39,7 @@ namespace Vector_Library.Managers
 			{
 				case (int)InputMapping.Exit:
 					logger.Log("Exit toggled...");
-					core.Exit();
+					core.continueRunning = false;
 					break;
 				// A fancy way to not rewrite 2 lines of code so I can use modulo
 				case (int)InputMapping.PreviousScene:
@@ -51,6 +51,10 @@ namespace Vector_Library.Managers
 					int nextSceneIndex = MathmaticalExtentions.WheelMod((sceneIndexMover + currentSceneIndex), core.sceneManager.LoadedScenes.Count);
 					logger.Log($"\tCurrent index is: {currentSceneIndex}, moving to index: {nextSceneIndex}");
 					core.sceneManager.SetActiveScene(nextSceneIndex);
+					break;
+				case (int)InputMapping.ToggleSceneInformation:
+					logger.Log("\t" + (scene.drawSceneInformation ? "Hidding" : "Showing") + " current scene information...");
+					scene.drawSceneInformation = !scene.drawSceneInformation;
 					break;
 			}
 		}
