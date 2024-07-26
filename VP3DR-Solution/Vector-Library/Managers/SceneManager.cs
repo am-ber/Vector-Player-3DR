@@ -10,20 +10,20 @@ namespace Vector_Library.Managers
 {
 	public class SceneManager
 	{
-		public Scene activeScene;
+		public Scene ActiveScene;
+		public List<Scene> LoadedScenes { get; private set; }
 		// Privates
 		private Scene fallBack;
-		private List<Scene> loadedScenes;
 		private Logger logger;
 		private SceneProcessor sceneProcessor;
 		public SceneManager(Core core)
 		{
 			logger = core.logger;
 			sceneProcessor = core.sceneProcessor;
-			loadedScenes = new List<Scene>();
+			LoadedScenes = new List<Scene>();
 			// set fallback scene
 			fallBack = new DefaultScene(core);
-			loadedScenes.Add(fallBack);
+			LoadedScenes.Add(fallBack);
 			SetActiveScene(0);
 			logger.Log("SceneManager initialized...");
 		}
@@ -79,7 +79,7 @@ namespace Vector_Library.Managers
 								if (instanceType.GetType().IsAssignableTo(typeof(Scene)))
 								{
 									Scene scene = (Scene)instanceType;
-									loadedScenes.Add(scene);
+									LoadedScenes.Add(scene);
 									logger.Log($"Successfully added {scene.Info.Name}");
 								}
 							}
@@ -97,11 +97,11 @@ namespace Vector_Library.Managers
 			}
 			// Iterate through the list of scenes to log what all we have in memory
 			StringBuilder printableSceneList = new StringBuilder();
-			foreach (Scene scene in loadedScenes)
+			foreach (Scene scene in LoadedScenes)
 			{
 				printableSceneList.Append($"{scene.Info.Name}, ");
 			}
-			logger.Log($"Currently loaded scenes ({loadedScenes.Count}): \n\t{printableSceneList.ToString()}");
+			logger.Log($"Currently loaded scenes ({LoadedScenes.Count}): \n\t{printableSceneList.ToString()}");
 		}
 		/// <summary>
 		/// Returns wither it successfully added the scene given to the active scene or not.
@@ -110,7 +110,7 @@ namespace Vector_Library.Managers
 		/// <returns></returns>
 		public bool SetActiveScene(Scene scene)
 		{
-			return SetActiveScene(loadedScenes.IndexOf(scene));
+			return SetActiveScene(LoadedScenes.IndexOf(scene));
 		}
 		/// <summary>
 		/// Returns wither it successfully added the index of the scene desired to the active scene or not.
@@ -122,18 +122,18 @@ namespace Vector_Library.Managers
 			try
 			{
 				// Dispose the old scene
-				if (activeScene != null)
-					activeScene.Dispose();
+				if (ActiveScene != null)
+					ActiveScene.Exit();
 				// Bring in the new one from the index provided
-				activeScene = loadedScenes[index];
-				activeScene.Load();
-				sceneProcessor.Initialize(activeScene);
+				ActiveScene = LoadedScenes[index];
+				ActiveScene.Load();
+				sceneProcessor.Initialize(ActiveScene);
 				return true;
 			}
 			catch (Exception e)
 			{
-				activeScene = fallBack;
-				activeScene.Load();
+				ActiveScene = fallBack;
+				ActiveScene.Load();
 				logger.Log($"Couldn't load scene at {index} index.\n{e.Message}\n{e.StackTrace}", Logger.Level.error);
 				return false;
 			}
@@ -144,8 +144,8 @@ namespace Vector_Library.Managers
 		public void Exit()
 		{
 			// Dispose of the current scene
-			if (activeScene != null)
-				activeScene.Dispose();
+			if (ActiveScene != null)
+				ActiveScene.Exit();
 			Raylib.CloseWindow();
 		}
 	}

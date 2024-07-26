@@ -1,6 +1,8 @@
-﻿namespace Vector_Library.Interfaces
+﻿using Raylib_cs;
+
+namespace Vector_Library.Interfaces
 {
-	public abstract class Scene : IDisposable
+	public abstract class Scene
 	{ 
 		public struct SceneInfo
 		{
@@ -21,14 +23,23 @@
 				Description = info.Description;
 			}
 		}
-		public (int width, int height) windowSize;
+		public (int width, int height) windowSize = (0, 0);
+		public bool drawSceneInformation = true;
 		protected Logger logger;
 		protected Core core;
-		public SceneInfo Info { get; protected set; }
+		public Scene()
+		{
+			core = Core.Instance;
+			logger = core.logger;
+		}
+		public SceneInfo Info { get; set; }
 		/// <summary>
 		/// Used as an initializer.
 		/// </summary>
-		public abstract void Load();
+		public virtual void Load()
+		{
+			logger.Log($"\tLoading scene: {Info.Name}");
+		}
 		/// <summary>
 		/// Runs in a loop before the draw method.
 		/// </summary>
@@ -40,6 +51,10 @@
 		/// <summary>
 		/// For cleaning up resources when a scene is discarded.
 		/// </summary>
-		public virtual void Dispose() { }
+		public virtual void Exit()
+		{
+			logger.Log($"Exiting scene: {Info.Name}");
+			Raylib.CloseWindow();
+		}
 	}
 }

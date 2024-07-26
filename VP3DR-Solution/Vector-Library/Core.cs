@@ -7,11 +7,14 @@ namespace Vector_Library
 {
 	public class Core
 	{
+		/// <summary>
+		/// Singleton coding practice for the Core of the library.
+		/// </summary>
 		public static Core Instance;
 		// public
 		public static readonly double version = 0.2;
 		public Logger logger;
-		public bool logActive;
+		public bool continueRunning;
 		public AudioProcessor audioProcessor;
 		public SceneManager sceneManager;
 		public InputManager inputManager;
@@ -29,8 +32,7 @@ namespace Vector_Library
 			}
 			// After singleton pattern checking we initialize the rest of the object.
 			Instance = this;
-
-			logActive = false;
+			continueRunning = true;
 			macroWatch = new Stopwatch();
 			microWatch = new Stopwatch();
 			// Start stop watches for analytics
@@ -48,7 +50,6 @@ namespace Vector_Library
 			// create log file
 			logger = new Logger();
 			logger.Log($"Initializing version {version}...");
-			logActive = true;
 			logger.Log($"Initialized logging in {microWatch.ElapsedMilliseconds} ms");
 			microWatch.Stop();
 		}
@@ -87,13 +88,13 @@ namespace Vector_Library
 			logger.Log("\n----------------------\nRunning Core method...\n----------------------\n");
 			try
 			{
-				while (!Raylib.WindowShouldClose())
+				do
 				{
 					microWatch.Restart();
 					sceneProcessor.Update();
 					sceneProcessor.Draw();
 					microWatch.Stop();
-				}
+				} while (continueRunning);
 			}
 			catch (Exception e)
 			{
@@ -105,6 +106,7 @@ namespace Vector_Library
 		{
 			sceneManager.Exit();
 			logger.Log("Closing application...");
+			continueRunning = false;
 		}
 	}
 }

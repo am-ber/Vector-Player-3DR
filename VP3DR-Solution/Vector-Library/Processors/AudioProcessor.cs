@@ -29,16 +29,14 @@ namespace Vector_Library.Processors
 			}
 		}
 		/// <summary>
-		/// Used to determine if a specific device is playing audio or not.
+		/// Used to determine if a specific device is active or not.
 		/// </summary>
 		/// <param name="device"></param>
 		/// <returns></returns>
-		public bool IsAudioPlaying(MMDevice device)
+		public bool IsDeviceActive(MMDevice device)
 		{
-			using (AudioMeterInformation meter = AudioMeterInformation.FromDevice(device))
-			{
-				return meter.PeakValue > 0;
-			}
+			device.GetStateNative(out DeviceState deviceState);
+			return deviceState == DeviceState.Active;
 		}
 	}
 }
