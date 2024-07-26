@@ -33,6 +33,10 @@ namespace Vector_Library.Interfaces
 		{
 			core = Core.Instance;
 			logger = core.logger;
+			// Checks if we are using the full screen or not
+			int currentMonitorIndex = Raylib.GetCurrentMonitor();
+			windowSize = ((windowSize.width <= 0 ? Raylib.GetMonitorWidth(currentMonitorIndex) : windowSize.width),
+				(windowSize.height <= 0 ? Raylib.GetMonitorHeight(currentMonitorIndex) : windowSize.height));
 		}
 		public SceneInfo Info { get; set; }
 		/// <summary>
@@ -54,13 +58,9 @@ namespace Vector_Library.Interfaces
 		{
 			// Scene info and description text drawing
 			int currentMonitorIndex = Raylib.GetCurrentMonitor();
-			// Checks if we are using the full screen or not
-			(int width, int height) windowSizeToUse = (
-				(windowSize.width <= 0 ? Raylib.GetMonitorWidth(currentMonitorIndex) : windowSize.width),
-				(windowSize.height <= 0 ? Raylib.GetMonitorHeight(currentMonitorIndex) : windowSize.height));
 			// Draw a transparent box over the screne as a tint
-			Raylib.DrawRectangle(0, 0, windowSizeToUse.width, windowSizeToUse.height, new Color(0, 0, 0, 128));
-			Vector2 center = new Vector2(windowSizeToUse.width / 2, windowSizeToUse.height / 2);
+			Raylib.DrawRectangle(0, 0, windowSize.width, windowSize.height, new Color(0, 0, 0, 128));
+			Vector2 center = new Vector2(windowSize.width / 2, windowSize.height / 2);
 			string defaultSceneText = $"FPS: {Raylib.GetFPS()}\n{Info.Name}\n{Info.Description}";
 			int textHeight = 20;
 			int defaultSceneTextWidth = Raylib.MeasureText(defaultSceneText, textHeight);
