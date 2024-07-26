@@ -43,6 +43,11 @@ namespace Vector_Library.Processors
 				if (currentScene.drawSceneInformation)
 					currentScene.DrawInfo();
 				Raylib.EndDrawing();
+				// If we run into a scenario where the user clicks the close button we still want to close the core application.
+				if (Raylib.WindowShouldClose() && core.continueRunning)
+				{
+					core.continueRunning = false;
+				}
 			}
 		}
 	}

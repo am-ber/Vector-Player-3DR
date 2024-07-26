@@ -61,7 +61,7 @@ namespace Vector_Library.Interfaces
 			// Draw a transparent box over the screne as a tint
 			Raylib.DrawRectangle(0, 0, windowSizeToUse.width, windowSizeToUse.height, new Color(0, 0, 0, 128));
 			Vector2 center = new Vector2(windowSizeToUse.width / 2, windowSizeToUse.height / 2);
-			string defaultSceneText = $"{Info.Name}\tFPS: {Raylib.GetFPS()}\n{Info.Description}";
+			string defaultSceneText = $"FPS: {Raylib.GetFPS()}\n{Info.Name}\n{Info.Description}";
 			int textHeight = 20;
 			int defaultSceneTextWidth = Raylib.MeasureText(defaultSceneText, textHeight);
 			Raylib.DrawText(defaultSceneText, (int)(center.X - (defaultSceneTextWidth / 2)), (int)(center.Y - (textHeight / 2)), textHeight, Color.Red);
