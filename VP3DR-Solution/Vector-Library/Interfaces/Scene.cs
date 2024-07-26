@@ -36,10 +36,7 @@ namespace Vector_Library.Interfaces
 		/// <summary>
 		/// Used as an initializer.
 		/// </summary>
-		public virtual void Load()
-		{
-			logger.Log($"\tLoading scene: {Info.Name}");
-		}
+		public abstract void Load();
 		/// <summary>
 		/// Runs in a loop before the draw method.
 		/// </summary>

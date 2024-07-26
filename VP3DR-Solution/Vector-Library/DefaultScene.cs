@@ -19,6 +19,10 @@ namespace Vector_Library
 			};
 			windowSize = (1280, 720);
 		}
+		public override void Load()
+		{
+
+		}
 		public override void Update()
 		{
 			

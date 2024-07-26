@@ -1,6 +1,5 @@
 ﻿using Vector_Library;
 using Vector_Library.Interfaces;
-using static Vector_Library.Interfaces.Scene;
 
 namespace Terrain
 {

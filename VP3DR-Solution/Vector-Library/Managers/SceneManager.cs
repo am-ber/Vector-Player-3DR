@@ -126,6 +126,7 @@ namespace Vector_Library.Managers
 					ActiveScene.Exit();
 				// Bring in the new one from the index provided
 				ActiveScene = LoadedScenes[index];
+				logger.Log($"Loading scene: {ActiveScene.Info.Name}");
 				ActiveScene.Load();
 				sceneProcessor.Initialize(ActiveScene);
 				return true;

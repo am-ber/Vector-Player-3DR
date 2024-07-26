@@ -31,7 +31,7 @@ namespace Vector_Library.Managers
 			// Grab the current keypress and print it
 			int keyPressed = Raylib.GetKeyPressed();
 			if (keyPressed != 0)
-				logger.Log($"Key Pressed: {Enum.GetName(typeof(KeyboardKey), keyPressed)}");
+				logger.Log($"\tKey Pressed: {Enum.GetName(typeof(KeyboardKey), keyPressed)}");
 
 			int sceneIndexMover = 0;
 			// Switch for specific keys being pressed
@@ -49,7 +49,7 @@ namespace Vector_Library.Managers
 					sceneIndexMover++;
 					int currentSceneIndex = core.sceneManager.LoadedScenes.IndexOf(core.sceneManager.ActiveScene);
 					int nextSceneIndex = MathmaticalExtentions.WheelMod((sceneIndexMover + currentSceneIndex), core.sceneManager.LoadedScenes.Count);
-					logger.Log($"Current index is: {currentSceneIndex}, moving to index: {nextSceneIndex}");
+					logger.Log($"\tCurrent index is: {currentSceneIndex}, moving to index: {nextSceneIndex}");
 					core.sceneManager.SetActiveScene(nextSceneIndex);
 					break;
 			}
