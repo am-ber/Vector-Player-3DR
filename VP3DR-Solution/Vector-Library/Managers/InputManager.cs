@@ -15,7 +15,7 @@ namespace Vector_Library.Managers
 			NextScene = KeyboardKey.E,
 			PreviousScene = KeyboardKey.Q,
 			ToggleHardwareMonitor = KeyboardKey.M,
-			ToggleSceneInformation = KeyboardKey.Tab,
+			ToggleSceneInformation = KeyboardKey.F1,
 		}
 		private Logger logger;
 		private Core core;

@@ -5,14 +5,15 @@ using CSCore;
 using CSCore.DSP;
 using CSCore.CoreAudioAPI;
 using CSCore.Streams;
+using CSCore.SoundIn;
 
 namespace Vector_Library.Processors
 {
 	public class AudioProcessor
 	{
-		private Logger logger;
+		public readonly FftSize fftSize = FftSize.Fft4096;
+		public Logger logger;
 		private Core core;
-		private IWaveSource source;
 		public AudioProcessor(Core core)
 		{
 			this.core = core;
@@ -30,6 +31,7 @@ namespace Vector_Library.Processors
 				return enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
 			}
 		}
+
 		/// <summary>
 		/// Used to determine if a specific device is active or not.
 		/// </summary>
@@ -40,18 +42,9 @@ namespace Vector_Library.Processors
 			device.GetStateNative(out DeviceState deviceState);
 			return deviceState == DeviceState.Active;
 		}
-		public void GetFFT(ISampleSource sampleSource)
+		public void Exit()
 		{
-			const FftSize fftSize = FftSize.Fft4096;
-			//create a spectrum provider which provides fft data based on some input
-			var spectrumProvider = new BasicSpectrumProvider(sampleSource.WaveFormat.Channels,
-				sampleSource.WaveFormat.SampleRate, fftSize);
-			//the SingleBlockNotificationStream is used to intercept the played samples
-			var notificationSource = new SingleBlockNotificationStream(sampleSource);
-			//pass the intercepted samples as input data to the spectrumprovider (which will calculate a fft based on them)
-			notificationSource.SingleBlockRead += (s, a) => spectrumProvider.Add(a.Left, a.Right);
 
-			source = notificationSource.ToWaveSource(16);
 		}
 	}
 }

@@ -222,7 +222,7 @@ namespace Vector_Library.Arithmetic.Audio
 		}
 
 		[DebuggerDisplay("{Value}")]
-		protected struct SpectrumPointData
+		public struct SpectrumPointData
 		{
 			public int SpectrumPointIndex;
 			public double Value;
