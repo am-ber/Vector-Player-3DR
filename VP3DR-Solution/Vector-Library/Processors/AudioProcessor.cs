@@ -42,9 +42,5 @@ namespace Vector_Library.Processors
 			device.GetStateNative(out DeviceState deviceState);
 			return deviceState == DeviceState.Active;
 		}
-		public void Exit()
-		{
-
-		}
 	}
 }

@@ -3,6 +3,7 @@ using CSCore.CoreAudioAPI;
 using CSCore.DSP;
 using CSCore.SoundIn;
 using CSCore.Streams;
+using Raylib_cs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,16 +60,19 @@ namespace Vector_Library.Arithmetic.Audio
 			}
 			if (soundIn == null)
 			{
-				soundIn = new WasapiCapture();
+				soundIn = new WasapiLoopbackCapture();
 				soundIn.Initialize();
 				soundIn.Start();
 			}
+			processor.logger.Log($"Sound IN: {soundIn.Device.FriendlyName}");
+
 			// Used for adjusting the source if needed
 			SoundInSource sample = new SoundInSource(soundIn);
+			
 			//create a spectrum provider which provides fft data based on some input
-			SpectrumProvider = new BasicSpectrumProvider(sample.WaveFormat.Channels,
-				sample.WaveFormat.SampleRate, processor.fftSize);
-
+			SpectrumProvider = new BasicSpectrumProvider(soundIn.WaveFormat.Channels,
+				soundIn.WaveFormat.SampleRate, processor.fftSize);
+			
 			var notificationSource = new SingleBlockNotificationStream(sample.ToSampleSource());
 			notificationSource.SingleBlockRead += (s, a) => (SpectrumProvider as BasicSpectrumProvider).Add(a.Left, a.Right);
 
@@ -80,12 +84,6 @@ namespace Vector_Library.Arithmetic.Audio
 				while ((read = sample.Read(buffer, 0, buffer.Length)) > 0);
 			};
 			return sample;
-		}
-		public int GetFFTBandIndex(ISampleSource sampleSource, float frequency)
-		{
-			SpectrumProvider = new BasicSpectrumProvider(sampleSource.WaveFormat.Channels,
-				sampleSource.WaveFormat.SampleRate, processor.fftSize);
-			return SpectrumProvider.GetFftBandIndex(frequency);
 		}
 		public void Stop()
 		{
