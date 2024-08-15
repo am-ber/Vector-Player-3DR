@@ -74,6 +74,7 @@ namespace Vector_Library
 			logger.Log($"Initialized Scene Processing in {microWatch.ElapsedMilliseconds} ms");
 			microWatch.Restart();
 			audioProcessor = new AudioProcessor(this);
+			audioProcessor.Initialize();
 			logger.Log($"Initialized Audio Processing in {microWatch.ElapsedMilliseconds} ms");
 			microWatch.Stop();
 		}

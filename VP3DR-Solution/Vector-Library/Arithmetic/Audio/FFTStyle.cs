@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Vector_Library.Arithmetic.Audio
 {
-	public interface ISpectrumProvider
+	public enum FFTStyle
 	{
-		bool GetFftData(float[] fftBuffer, object context);
-		int GetFftBandIndex(float frequency);
+		Magnitude,
+		InverseReal,
+		Phase,
+		Power
 	}
 }

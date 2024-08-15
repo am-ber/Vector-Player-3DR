@@ -1,8 +1,7 @@
 ﻿using System.Numerics;
-using CSCore;
-using CSCore.CoreAudioAPI;
-using CSCore.SoundIn;
-using CSCore.Streams;
+using System.Text;
+using NAudio.CoreAudioApi;
+using NAudio.Wave;
 using Raylib_cs;
 using Vector_Library.Arithmetic;
 using Vector_Library.Arithmetic.Audio;
@@ -13,7 +12,6 @@ namespace Vector_Library
 {
     public class DefaultScene : Scene
 	{
-		ClassicSpectrum spectrum;
 		public DefaultScene() : this(Core.Instance) { }
 		public DefaultScene(Core core)
 		{
@@ -28,7 +26,7 @@ namespace Vector_Library
 		}
 		public override void Load()
 		{
-			spectrum = new ClassicSpectrum(core.audioProcessor);
+			core.audioProcessor.ToggleCapture(true);
 		}
 		public override void Update()
 		{
@@ -37,19 +35,21 @@ namespace Vector_Library
 		public override void Draw()
 		{
 			Raylib.ClearBackground(Color.Black);
-			SpectrumPointData[] spectrumPoints = spectrum.GetSpectrumPoints();
-			int spectrumSpacing = (int)MathF.Round((windowSize.width / (spectrumPoints.Length > 0 ? spectrumPoints.Length : windowSize.width)), MidpointRounding.ToPositiveInfinity);
-			for (int i = 0; i < spectrumPoints.Length; i++)
+			
+			StringBuilder waveData = new StringBuilder("Wave Data: ");
+			double[] frequencies = core.audioProcessor.GetFFT();
+			if (frequencies != null)
 			{
-				SpectrumPointData spectrumPoint = spectrumPoints[i];
-				int mappedY = (int)MathmaticalExtentions.Map(spectrumPoint.Value, 0, 1.0, windowSize.height, 0);
-				Raylib.DrawRectangle(spectrumPoint.SpectrumPointIndex, windowSize.height, spectrumSpacing, mappedY, Color.Red);
+				for (int i = 0; i < frequencies.Length; i++)
+				{
+					waveData.Append($"{Math.Round(frequencies[i], 3)}, ");
+					if (i % 128 == 0)
+					{
+						waveData.Append("\n");
+					}
+				}
 			}
-		}
-		public override void Exit()
-		{
-			spectrum.Stop();
-			base.Exit();
+			Raylib.DrawText(waveData.ToString(), 0, windowSize.height / 2, 4, Color.White);
 		}
 	}
 }

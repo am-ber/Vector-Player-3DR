@@ -1,5 +1,4 @@
-﻿using CSCore.CoreAudioAPI;
-using Raylib_cs;
+﻿using Raylib_cs;
 using System.ComponentModel;
 using System.Numerics;
 using System.Reflection;

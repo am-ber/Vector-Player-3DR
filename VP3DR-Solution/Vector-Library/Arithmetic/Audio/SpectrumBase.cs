@@ -1,6 +1,4 @@
-﻿using CSCore.DSP;
-using CSCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -28,7 +26,6 @@ namespace Vector_Library.Arithmetic.Audio
 		private ScalingStrategy _scalingStrategy;
 		private int[] _spectrumIndexMax;
 		private int[] _spectrumLogScaleIndexMax;
-		private ISpectrumProvider _spectrumProvider;
 
 		protected int SpectrumResolution;
 		private bool _useAverage;
@@ -64,20 +61,6 @@ namespace Vector_Library.Arithmetic.Audio
 			}
 		}
 
-		[BrowsableAttribute(false)]
-		public ISpectrumProvider SpectrumProvider
-		{
-			get { return _spectrumProvider; }
-			set
-			{
-				if (value == null)
-					throw new ArgumentNullException("value");
-				_spectrumProvider = value;
-
-				RaisePropertyChanged("SpectrumProvider");
-			}
-		}
-
 		public bool IsXLogScale
 		{
 			get { return _isXLogScale; }
@@ -109,36 +92,20 @@ namespace Vector_Library.Arithmetic.Audio
 			}
 		}
 
-		[BrowsableAttribute(false)]
-		public FftSize FftSize
-		{
-			get { return (FftSize)_fftSize; }
-			protected set
-			{
-				if ((int)Math.Log((int)value, 2) % 1 != 0)
-					throw new ArgumentOutOfRangeException("value");
-
-				_fftSize = (int)value;
-				_maxFftIndex = _fftSize / 2 - 1;
-
-				RaisePropertyChanged("FFTSize");
-			}
-		}
-
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		protected virtual void UpdateFrequencyMapping()
 		{
-			_maximumFrequencyIndex = Math.Min(_spectrumProvider.GetFftBandIndex(MaximumFrequency) + 1, _maxFftIndex);
-			_minimumFrequencyIndex = Math.Min(_spectrumProvider.GetFftBandIndex(MinimumFrequency), _maxFftIndex);
+			/*_maximumFrequencyIndex = Math.Min(_spectrumProvider.GetFftBandIndex(MaximumFrequency) + 1, _maxFftIndex);
+			_minimumFrequencyIndex = Math.Min(_spectrumProvider.GetFftBandIndex(MinimumFrequency), _maxFftIndex);*/
 
 			int actualResolution = SpectrumResolution;
 
 			int indexCount = _maximumFrequencyIndex - _minimumFrequencyIndex;
 			double linearIndexBucketSize = Math.Round(indexCount / (double)actualResolution, 3);
 
-			_spectrumIndexMax = _spectrumIndexMax.CheckBuffer(actualResolution, true);
-			_spectrumLogScaleIndexMax = _spectrumLogScaleIndexMax.CheckBuffer(actualResolution, true);
+			/*_spectrumIndexMax = _spectrumIndexMax.CheckBuffer(actualResolution, true);
+			_spectrumLogScaleIndexMax = _spectrumLogScaleIndexMax.CheckBuffer(actualResolution, true);*/
 
 			double maxLog = Math.Log(actualResolution, actualResolution);
 			for (int i = 1; i < actualResolution; i++)

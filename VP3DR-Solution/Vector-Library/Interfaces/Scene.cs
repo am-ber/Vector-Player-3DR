@@ -1,5 +1,4 @@
-﻿using CSCore.CoreAudioAPI;
-using Raylib_cs;
+﻿using Raylib_cs;
 using System.Numerics;
 
 namespace Vector_Library.Interfaces
@@ -66,8 +65,7 @@ namespace Vector_Library.Interfaces
 			int defaultSceneTextWidth = Raylib.MeasureText(defaultSceneText, textHeight);
 			Raylib.DrawText(defaultSceneText, (int)(center.X - (defaultSceneTextWidth / 2)), (int)(center.Y - (textHeight / 2)), textHeight, Color.Red);
 			// Audio device description
-			MMDevice defaultAudioDevice = core.audioProcessor.GetDefaultRenderDevice();
-			string audioDeviceText = $"Default Audio Device: {defaultAudioDevice.FriendlyName} | Is it active? {core.audioProcessor.IsDeviceActive(defaultAudioDevice)}";
+			string audioDeviceText = $"Default Audio Device: {core.audioProcessor.GetMediaDevice().FriendlyName} | Current State? {core.audioProcessor.GetMediaDevice().State}";
 			int audioDeviceTextWidth = Raylib.MeasureText(audioDeviceText, textHeight);
 			Raylib.DrawText(audioDeviceText, (int)(center.X - (defaultSceneTextWidth / 2)), (int)(center.Y + (textHeight * 2)), textHeight, Color.Red);
 		}
