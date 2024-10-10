@@ -4,6 +4,8 @@ using UnityEngine.Audio;
 
 public class SpectrumAnalyzer : MonoBehaviour
 {
+	[HideInInspector]
+	public const int MULTIPLE = 2;
 	public bool UseMicrophone = true;
 	[SerializeField]
 	private AudioMixerGroup mixerGroup = null;
@@ -13,13 +15,13 @@ public class SpectrumAnalyzer : MonoBehaviour
 	[SerializeField]
 	private AudioSource audioSource;
 	[SerializeField]
-	private FFTWindow currentWindow = FFTWindow.Hamming;
+	private FFTWindow currentWindow = FFTWindow.Hanning;
 	private void Start()
 	{
 		audioSource = gameObject.AddComponent<AudioSource>();
 		audioSource.outputAudioMixerGroup = mixerGroup;
 		// Set to the default device to start with.
-		SetInput(Microphone.devices[0]);
+		SetAudioInput(Microphone.devices[0]);
 	}
 	private void Update()
 	{
@@ -32,12 +34,13 @@ public class SpectrumAnalyzer : MonoBehaviour
 			Debug.DrawLine(new Vector3(Mathf.Log(i - 1), Mathf.Log(spectrum[i - 1]), 3), new Vector3(Mathf.Log(i), Mathf.Log(spectrum[i]), 3), Color.blue);
 		}
 	}
-	public void SetInput(string input)
+	public void SetAudioInput(string input)
 	{
 		try
 		{
 			currentInput = input;
 			audioSource.clip = Microphone.Start(currentInput, true, 10, AudioSettings.outputSampleRate);
+			audioSource.loop = true;
 			audioSource.Play();
 		}
 		catch (Exception e)
@@ -45,11 +48,17 @@ public class SpectrumAnalyzer : MonoBehaviour
 			Debug.LogError($"Error while setting the input:\t{e.Message}\n{e.StackTrace}");
 		}
 	}
-	public float[] GetSpectrum(int fftSize = 256)
+	public float[] GetSpectrum(int fftSize = 512)
 	{
-		if ((fftSize == 0) || ((fftSize & (fftSize - 1)) != 0))
+		// Break on numbers that don't make sense
+		if (fftSize <= 0)
 		{
 			return null;
+		}
+		// Snap the FFT when we can to be nice
+		if ((fftSize & (fftSize - 1)) != 0)
+		{
+			fftSize = (fftSize + MULTIPLE / 2) * MULTIPLE;
 		}
 		float[] result = new float[fftSize];
 		audioSource.GetSpectrumData(result, 0, currentWindow);
